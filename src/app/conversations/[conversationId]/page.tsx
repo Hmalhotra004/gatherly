@@ -1,0 +1,36 @@
+import getConversationById from "@/actions/getConversationById";
+import getMessages from "@/actions/getMessages";
+import ChatForm from "@/components/chat/ChatForm";
+import ChatWall from "@/components/chat/ChatWall";
+import Header from "@/components/chat/Header";
+import EmptyState from "@/components/EmptyState";
+
+interface ConversationIdPageProps {
+  params: { conversationId: string };
+}
+
+const ConversationIdPage = async ({ params }: ConversationIdPageProps) => {
+  const conversation = await getConversationById(params.conversationId);
+  const messages = await getMessages(params.conversationId);
+
+  if (!conversation) {
+    return (
+      <div className="lg:pl-80 h-full">
+        <div className="h-full flex flex-col">
+          <EmptyState />
+        </div>
+      </div>
+    );
+  }
+  return (
+    <div className="lg:pl-80 h-full">
+      <div className="h-full flex flex-col">
+        <Header conversation={conversation} />
+        <ChatWall initialMessages={messages!} />
+        <ChatForm />
+      </div>
+    </div>
+  );
+};
+
+export default ConversationIdPage;
