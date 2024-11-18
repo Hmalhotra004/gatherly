@@ -1,9 +1,9 @@
 "use client";
 
+import Avatar from "@/components/Avatar";
 import useRoutes from "@/hooks/useRoutes";
 import { User } from "@prisma/client";
 import { useState } from "react";
-// import Avatar from "../Avatar";
 import DesktopItem from "./DesktopItem";
 
 interface DestopSidebarProps {
@@ -42,7 +42,7 @@ const DesktopSidebar = ({ currentUser }: DestopSidebarProps) => {
           onClick={() => setIsOpen(true)}
           className="cursor-pointer hover:opacity-75 transition"
         >
-          {/* <Avatar user={currentUser} /> */}L
+          <Avatar user={currentUser} />
         </div>
       </nav>
     </div>

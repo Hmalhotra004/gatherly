@@ -1,6 +1,6 @@
 import getUsers from "@/actions/getUsers";
 import Sidebar from "@/components/sidebar/Sidebar";
-// import UserList from "@/components/users/UserList";
+import UserList from "@/components/users/UserList";
 
 export default async function UsersLayout({
   children,
@@ -11,7 +11,7 @@ export default async function UsersLayout({
   return (
     <Sidebar>
       <div className="h-full">
-        {/* <UserList items={users} /> */}
+        <UserList items={users} />
         {children}
       </div>
     </Sidebar>
