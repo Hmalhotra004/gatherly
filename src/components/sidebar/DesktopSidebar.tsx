@@ -4,6 +4,7 @@ import Avatar from "@/components/Avatar";
 import useRoutes from "@/hooks/useRoutes";
 import { User } from "@prisma/client";
 import SettingsModal from "../modals/SettingsModal";
+import ModeToggle from "../ModeToggle";
 import DesktopItem from "./DesktopItem";
 
 interface DestopSidebarProps {
@@ -36,7 +37,8 @@ const DesktopSidebar = ({ currentUser }: DestopSidebarProps) => {
           ))}
         </ul>
       </nav>
-      <nav className="mt-4 flex flex-col justify-between items-center">
+      <nav className="mt-4 flex flex-col justify-between items-center gap-y-4">
+        <ModeToggle />
         <SettingsModal currentUser={currentUser}>
           <div className="cursor-pointer hover:opacity-75 transition">
             <Avatar user={currentUser} />
