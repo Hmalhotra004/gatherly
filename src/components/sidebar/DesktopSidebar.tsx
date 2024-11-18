@@ -3,7 +3,8 @@
 import Avatar from "@/components/Avatar";
 import useRoutes from "@/hooks/useRoutes";
 import { User } from "@prisma/client";
-import { useState } from "react";
+import SettingsModal from "../modals/SettingsModal";
+import ModeToggle from "../ModeToggle";
 import DesktopItem from "./DesktopItem";
 
 interface DestopSidebarProps {
@@ -12,7 +13,6 @@ interface DestopSidebarProps {
 
 const DesktopSidebar = ({ currentUser }: DestopSidebarProps) => {
   const routes = useRoutes();
-  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <div
@@ -37,13 +37,13 @@ const DesktopSidebar = ({ currentUser }: DestopSidebarProps) => {
           ))}
         </ul>
       </nav>
-      <nav className="mt-4 flex flex-col justify-between items-center">
-        <div
-          onClick={() => setIsOpen(true)}
-          className="cursor-pointer hover:opacity-75 transition"
-        >
-          <Avatar user={currentUser} />
-        </div>
+      <nav className="mt-4 flex flex-col justify-between items-center gap-y-4">
+        <ModeToggle />
+        <SettingsModal currentUser={currentUser}>
+          <div className="cursor-pointer hover:opacity-75 transition">
+            <Avatar user={currentUser} />
+          </div>
+        </SettingsModal>
       </nav>
     </div>
   );

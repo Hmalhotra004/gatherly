@@ -7,6 +7,7 @@ import { format } from "date-fns";
 import { Trash2 } from "lucide-react";
 import { useMemo } from "react";
 import Avatar from "./Avatar";
+import ConvoDeleteAlert from "./modals/ConvoDeleteAlert";
 import {
   Sheet,
   SheetContent,
@@ -56,17 +57,19 @@ const ProfileDrawer = ({ data, children }: ProfileDrawerProps) => {
             <div>{title}</div>
             <div className="text-sm text-gray-500">{statusText}</div>
             <div className="flex gap-10 my-8">
-              <div
-                onClick={() => {}}
-                className="flex flex-col gap-3 items-center cursor-pointer hover:opacity-75"
-              >
-                <div className="w-10 h-10 bg-neutral-100 rounded-full flex items-center justify-center">
-                  <Trash2 size={20} />
+              <ConvoDeleteAlert>
+                <div
+                  onClick={() => {}}
+                  className="flex flex-col gap-3 items-center cursor-pointer hover:opacity-75"
+                >
+                  <div className="w-10 h-10 bg-neutral-100 rounded-full flex items-center justify-center">
+                    <Trash2 size={20} />
+                  </div>
+                  <div className="text-sm font-light text-neutral-600">
+                    Delete
+                  </div>
                 </div>
-                <div className="text-sm font-light text-neutral-600">
-                  Delete
-                </div>
-              </div>
+              </ConvoDeleteAlert>
             </div>
             <div className="w-full pb-5 pt-5 sm:px-0 sm:pt-0">
               <dl className="space-y-8 px-4 sm:space-y-6 sm:px-6">

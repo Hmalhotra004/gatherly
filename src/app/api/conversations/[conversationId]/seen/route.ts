@@ -13,14 +13,14 @@ export async function POST(req: Request, { params }: { params: route }) {
     if (!currentUser?.id || !currentUser?.email)
       return new NextResponse("Unauthorized", { status: 401 });
 
-    const { conversationId } = params;
+    const { conversationId } = await params;
 
     if (!conversationId)
       return new NextResponse("No ConversationId", { status: 404 });
 
     const conversation = await db.conversation.findUnique({
       where: {
-        id: params.conversationId,
+        id: conversationId,
       },
       include: {
         messages: {
