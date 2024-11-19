@@ -6,13 +6,11 @@ import { Input } from "@/components/ui/input";
 import useConversation from "@/hooks/useConversation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
-import {
-  CldUploadButton,
-  CloudinaryUploadWidgetResults,
-} from "next-cloudinary";
+import { CloudinaryUploadWidgetResults } from "next-cloudinary";
 import { useForm } from "react-hook-form";
 import { HiPaperAirplane, HiPhoto } from "react-icons/hi2";
 import { z } from "zod";
+import ImageUploadModal from "../modals/ImageUploadModal";
 
 const formSchema = z.object({
   message: z.string().min(1),
@@ -50,17 +48,12 @@ const ChatForm = () => {
 
   return (
     <div className="p-4 bg-white border-t flex items-center gap-2 lg:gap-4 w-full">
-      <CldUploadButton
-        options={{ maxFiles: 1 }}
-        onSuccess={(r) => handleUpload(r)}
-        uploadPreset="xv8cpb4y"
-      >
+      <ImageUploadModal>
         <HiPhoto
           size={30}
-          className="text-sky-500"
+          className="text-sky-500 cursor-pointer"
         />
-      </CldUploadButton>
-
+      </ImageUploadModal>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}

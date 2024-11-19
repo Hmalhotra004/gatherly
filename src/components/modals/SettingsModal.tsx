@@ -10,10 +10,7 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { User } from "@prisma/client";
 import axios from "axios";
-import {
-  CldUploadButton,
-  CloudinaryUploadWidgetResults,
-} from "next-cloudinary";
+import { CloudinaryUploadWidgetResults } from "next-cloudinary";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -30,6 +27,7 @@ import {
   FormItem,
   FormMessage,
 } from "../ui/form";
+import ProfileImageModal from "./ProfileImageModal";
 
 interface SettingsModalProps {
   currentUser: User;
@@ -137,20 +135,15 @@ const SettingsModal = ({ currentUser, children }: SettingsModalProps) => {
                         src={image || currentUser?.image || "/placeholder.jpeg"}
                       />
 
-                      <CldUploadButton
-                        options={{ maxFiles: 1 }}
-                        onUpload={(r) => handleUpload(r)}
-                        uploadPreset="xv8cpb4y"
-                      >
+                      <ProfileImageModal>
                         <Button
                           disabled={isLoading}
                           secondary
                           type="button"
-                          // onClick={() => setIsOpen(false)}
                         >
                           Change
                         </Button>
-                      </CldUploadButton>
+                      </ProfileImageModal>
                     </div>
                   </div>
                 </div>
@@ -167,6 +160,7 @@ const SettingsModal = ({ currentUser, children }: SettingsModalProps) => {
                 <Button
                   disabled={isLoading}
                   type="submit"
+                  // onClick={(e) => stopPropagation()}
                 >
                   Save
                 </Button>

@@ -1,6 +1,7 @@
 import type { Config } from "tailwindcss";
+import { withUt } from "uploadthing/tw";
 
-export default {
+export default withUt({
   darkMode: ["class"],
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
@@ -22,4 +23,4 @@ export default {
       strategy: "class",
     }),
   ],
-} satisfies Config;
+  } satisfies Config);
