@@ -3,11 +3,11 @@ import db from "@/lib/db";
 import { pusherServer } from "@/lib/pusher";
 import { NextResponse } from "next/server";
 
-interface route {
+interface Iparams {
   conversationId: string;
 }
 
-export async function DELETE(req: Request, { params }: { params: route }) {
+export async function DELETE(req: Request, { params }: { params: Iparams }) {
   try {
     const currentUser = await getCurrentUser();
 
