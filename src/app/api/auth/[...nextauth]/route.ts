@@ -3,11 +3,10 @@ import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import bcrypt from "bcrypt";
 import NextAuth, { AuthOptions } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
-// import GithubProvider from "next-auth/providers/github";
 import Github from "next-auth/providers/github";
 import Google from "next-auth/providers/google";
 
-export const authOptions: AuthOptions = {
+const authOptions: AuthOptions = {
   adapter: PrismaAdapter(db),
   providers: [
     Github({
@@ -57,4 +56,10 @@ export const authOptions: AuthOptions = {
 
 const handler = NextAuth(authOptions);
 
-export { handler as GET, handler as POST };
+export {
+  handler as DELETE,
+  handler as GET,
+  handler as PATCH,
+  handler as POST,
+  handler as PUT,
+};
