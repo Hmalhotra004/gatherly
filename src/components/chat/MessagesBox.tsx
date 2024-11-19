@@ -4,6 +4,7 @@ import { format } from "date-fns";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Avatar from "../Avatar";
+import ImageModal from "../modals/ImageModal";
 
 interface MessageBoxProps {
   isLast?: boolean;
@@ -45,13 +46,15 @@ const MessagesBox = ({ isLast, data }: MessageBoxProps) => {
         </div>
         <div className={message}>
           {data.image ? (
-            <Image
-              alt="image"
-              width="200"
-              height="200"
-              src={data.image}
-              className="object-cover cursor-pointer hover:scale-110 transition translate"
-            />
+            <ImageModal src={data.image}>
+              <Image
+                alt="image"
+                width="200"
+                height="200"
+                src={data.image}
+                className="object-cover cursor-pointer hover:scale-110 transition translate"
+              />
+            </ImageModal>
           ) : (
             <div>{data.body}</div>
           )}
