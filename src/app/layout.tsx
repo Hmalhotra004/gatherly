@@ -1,3 +1,4 @@
+import ActiveStatus from "@/components/ActiveStatus";
 import AuthContext from "@/context/AuthContext";
 import ToasterContext from "@/context/ToasterContext";
 import { ThemeProvider } from "@/providers/theme-provider";
@@ -31,6 +32,7 @@ export default function RootLayout({
         >
           <AuthContext>
             <ToasterContext />
+            <ActiveStatus />
             {children}
           </AuthContext>
         </ThemeProvider>
