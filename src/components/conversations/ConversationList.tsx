@@ -5,13 +5,16 @@ import clsx from "clsx";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { MdOutlineGroupAdd } from "react-icons/md";
+import MakeGroupModal from "../modals/MakeGroupModal";
 import ConversationBox from "./ConversationBox";
+import { User } from "@prisma/client";
 
 interface ConversationListProps {
   initialItems: FullConversationType[];
+  users:User[]
 }
 
-const ConversationList = ({ initialItems }: ConversationListProps) => {
+const ConversationList = ({ initialItems,users }: ConversationListProps) => {
   const [items, setItems] = useState(initialItems);
   const router = useRouter();
   const { conversationId, isOpen } = useConversation();
@@ -26,12 +29,14 @@ const ConversationList = ({ initialItems }: ConversationListProps) => {
       <div className="px-5">
         <div className="flex justify-between mb-4 pt-4">
           <div className="text-2xl font-bold text-neutral-800">Messages</div>
-          <div className="rounded-full bg-gray-100 text-gray-600 cursor-pointer hover:opacity-75 transition p-2">
-            <MdOutlineGroupAdd
-              className=""
-              size={20}
-            />
-          </div>
+          <MakeGroupModal users={users}>
+            <div className="rounded-full bg-gray-100 text-gray-600 cursor-pointer hover:opacity-75 transition p-2">
+              <MdOutlineGroupAdd
+                className=""
+                size={20}
+              />
+            </div>
+          </MakeGroupModal>
         </div>
         {items.map((item) => (
           <ConversationBox
