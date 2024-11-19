@@ -2,6 +2,7 @@
 
 import useOtherUser from "@/hooks/useOtherUser";
 // import { Dialog, Transition } from "@headlessui/react";
+import useActiveList from "@/store/useActiveList";
 import { Conversation, User } from "@prisma/client";
 import { format } from "date-fns";
 import { Trash2 } from "lucide-react";
@@ -26,6 +27,8 @@ interface ProfileDrawerProps {
 
 const ProfileDrawer = ({ data, children }: ProfileDrawerProps) => {
   const otherUser = useOtherUser(data);
+  const { members } = useActiveList();
+  const isActive = members.indexOf(otherUser?.email!) !== -1;
 
   const joinedDate = useMemo(() => {
     return format(new Date(otherUser.createdAt), "PP");
@@ -39,7 +42,7 @@ const ProfileDrawer = ({ data, children }: ProfileDrawerProps) => {
     if (data.isGroup) {
       return `${data.users.length} members`;
     }
-    return `Active`;
+    return isActive ? `Active` : "Offline";
   }, [data]);
 
   return (
