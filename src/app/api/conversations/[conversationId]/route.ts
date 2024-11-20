@@ -3,11 +3,11 @@ import db from "@/lib/db";
 import { pusherServer } from "@/lib/pusher";
 import { NextResponse } from "next/server";
 
-interface Iparams {
-  conversationId: string;
+interface IParams {
+  conversationId?: string;
 }
 
-export async function DELETE(req: Request, { params }: { params: Iparams }) {
+export async function DELETE(req: Request, { params }: { params: IParams }) {
   try {
     const currentUser = await getCurrentUser();
 
@@ -16,7 +16,6 @@ export async function DELETE(req: Request, { params }: { params: Iparams }) {
     }
 
     const { conversationId } = params;
-    console.log("Deleting conversation with ID:", conversationId);
 
     const existingConversation = await db.conversation.findUnique({
       where: {
@@ -50,7 +49,6 @@ export async function DELETE(req: Request, { params }: { params: Iparams }) {
       }
     });
 
-    console.log("Deleted conversation:", deletedConversation);
     return NextResponse.json(deletedConversation);
   } catch (err) {
     console.log(err, "ERROR_DELETE_CONVERSATION");

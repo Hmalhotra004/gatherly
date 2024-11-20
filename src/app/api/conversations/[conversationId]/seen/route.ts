@@ -3,11 +3,11 @@ import db from "@/lib/db";
 import { pusherServer } from "@/lib/pusher";
 import { NextResponse } from "next/server";
 
-interface route {
+interface IParams {
   conversationId: string;
 }
 
-export async function POST(req: Request, { params }: { params: route }) {
+export async function POST(req: Request, { params }: { params: IParams }) {
   try {
     const currentUser = await getCurrentUser();
 
