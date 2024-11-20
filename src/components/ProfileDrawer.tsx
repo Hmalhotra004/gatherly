@@ -43,7 +43,7 @@ const ProfileDrawer = ({ data, children }: ProfileDrawerProps) => {
       return `${data.users.length} members`;
     }
     return isActive ? `Active` : "Offline";
-  }, [data]);
+  }, [data, isActive]);
 
   return (
     <Sheet>
