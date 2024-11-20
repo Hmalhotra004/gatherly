@@ -1,3 +1,4 @@
+"use server";
 import getCurrentUser from "@/actions/getCurrentUser";
 import db from "@/lib/db";
 import { pusherServer } from "@/lib/pusher";
