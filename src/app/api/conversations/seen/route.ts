@@ -1,9 +1,10 @@
+"use server";
 import getCurrentUser from "@/actions/getCurrentUser";
 import db from "@/lib/db";
 import { pusherServer } from "@/lib/pusher";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   try {
     const currentUser = await getCurrentUser();
 

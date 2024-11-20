@@ -1,8 +1,9 @@
+"use server";
 import getCurrentUser from "@/actions/getCurrentUser";
 import db from "@/lib/db";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function PATCH(req: Request) {
+export async function PATCH(req: NextRequest) {
   try {
     const currentUser = await getCurrentUser();
     if (!currentUser?.id || !currentUser?.email)

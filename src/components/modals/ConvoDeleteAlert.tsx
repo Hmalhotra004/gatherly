@@ -29,7 +29,7 @@ const ConvoDeleteAlert = ({ children }: ConvoDeleteAlertProps) => {
   async function onDelete() {
     setLoading(true);
     try {
-      const response = await axios.delete(`/api/conversations/delete`, {
+      const response = await axios.delete(`/api/conversations`, {
         data: {
           conversationId,
         },
