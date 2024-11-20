@@ -18,7 +18,7 @@ const ChatWall = ({ initialMessages }: ChatWallProps) => {
   const { conversationId } = useConversation();
 
   useEffect(() => {
-    axios.post(`/api/conversations/${conversationId}/seen`);
+    axios.post(`/api/conversations/seen`, { conversationId });
   }, [conversationId]);
 
   useEffect(() => {
@@ -26,7 +26,7 @@ const ChatWall = ({ initialMessages }: ChatWallProps) => {
     bottomRef?.current?.scrollIntoView();
 
     async function messageHandler(message: FullMessageType) {
-      await axios.post(`/api/conversations/${conversationId}/seen`);
+      axios.post(`/api/conversations/seen`, { conversationId });
       setMessages((current) => {
         if (find(current, { id: message.id })) {
           return current;
