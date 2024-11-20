@@ -10,7 +10,6 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { User } from "@prisma/client";
 import axios from "axios";
-import { CloudinaryUploadWidgetResults } from "next-cloudinary";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -56,13 +55,6 @@ const SettingsModal = ({ currentUser, children }: SettingsModalProps) => {
   });
 
   const image = form.watch("image");
-
-  const handleUpload = (result: CloudinaryUploadWidgetResults) => {
-    form.setValue("image", result, {
-      shouldValidate: true,
-    });
-    setIsOpen(true);
-  };
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);

@@ -17,6 +17,7 @@ const getCurrentUser = async () => {
 
     return currentUser;
   } catch (err) {
+    console.error(err);
     return null;
   }
 };

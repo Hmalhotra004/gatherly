@@ -6,7 +6,6 @@ import { Input } from "@/components/ui/input";
 import useConversation from "@/hooks/useConversation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
-import { CloudinaryUploadWidgetResults } from "next-cloudinary";
 import { useForm } from "react-hook-form";
 import { HiPaperAirplane, HiPhoto } from "react-icons/hi2";
 import { z } from "zod";
@@ -33,17 +32,6 @@ const ChatForm = () => {
       ...values,
       conversationId,
     });
-  }
-
-  function handleUpload(result: CloudinaryUploadWidgetResults) {
-    try {
-      axios.post(`/api/messages`, {
-        image: result,
-        conversationId,
-      });
-    } catch (error) {
-      console.error("Image upload failed:", error);
-    }
   }
 
   return (

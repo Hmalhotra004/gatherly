@@ -1,6 +1,5 @@
 "use client";
 
-import useConversation from "@/hooks/useConversation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { DialogTitle } from "@radix-ui/react-dialog";
 import axios from "axios";
@@ -30,7 +29,6 @@ const formSchema = z.object({
 const ProfileImageModal = ({ children }: ProfileImageModalProps) => {
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const { conversationId } = useConversation();
   const router = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -86,7 +84,12 @@ const ProfileImageModal = ({ children }: ProfileImageModalProps) => {
               className="mt-4"
               onClick={(e) => e.stopPropagation()}
             >
-              <Button fullWidth>Send</Button>
+              <Button
+                fullWidth
+                disabled={isLoading}
+              >
+                Send
+              </Button>
             </div>
           </form>
         </Form>

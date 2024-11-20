@@ -32,6 +32,7 @@ const MobileItem = ({
       onClick={handleClick}
     >
       <Icon className="h-6 w-6" />
+      <p className="sr-only">{label}</p>
     </Link>
   );
 };

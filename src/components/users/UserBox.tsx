@@ -1,7 +1,7 @@
 import { User } from "@prisma/client";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 import Avatar from "../Avatar";
 interface UserBoxProps {
   data: User;
@@ -9,19 +9,20 @@ interface UserBoxProps {
 
 const UserBox = ({ data }: UserBoxProps) => {
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
+  // const [isLoading, setIsLoading] = useState(false);
 
   const handleClick = useCallback(() => {
-    setIsLoading(true);
+    // setIsLoading(true);
     axios
       .post(`/api/conversations`, {
         userId: data.id,
       })
       .then((data) => {
         router.push(`/conversations/${data.data.id}`);
-      })
-      .finally(() => setIsLoading(false));
+      });
+    // .finally(() => setIsLoading(false));
   }, [data.id, router]);
+
   return (
     <div
       onClick={handleClick}

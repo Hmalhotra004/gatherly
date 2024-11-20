@@ -18,6 +18,7 @@ const getConversationById = async (conversationId: string) => {
 
     return conversation;
   } catch (e) {
+    console.log(e);
     return null;
   }
 };

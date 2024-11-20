@@ -24,8 +24,9 @@ export const authOptions: AuthOptions = {
         password: { label: "password", type: "password" },
       },
       async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password)
+        if (!credentials?.email || !credentials?.password) {
           throw new Error("Please provide both email and password");
+        }
 
         const user = await db.user.findUnique({
           where: {
@@ -33,15 +34,18 @@ export const authOptions: AuthOptions = {
           },
         });
 
-        if (!user || !user?.hashedPassword)
+        if (!user || !user?.hashedPassword) {
           throw new Error("Invalid credentials");
+        }
 
         const isCorrectPassword = await bcrypt.compare(
           credentials.password,
           user.hashedPassword
         );
 
-        if (!isCorrectPassword) throw new Error("Invalid credentials");
+        if (!isCorrectPassword) {
+          throw new Error("Invalid credentials");
+        }
 
         return user;
       },
