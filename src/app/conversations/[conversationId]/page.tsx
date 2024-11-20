@@ -5,11 +5,11 @@ import ChatWall from "@/components/chat/ChatWall";
 import Header from "@/components/chat/Header";
 import EmptyState from "@/components/EmptyState";
 
-interface ConversationIdPageProps {
+const ConversationIdPage = async ({
+  params,
+}: {
   params: { conversationId: string };
-}
-
-const ConversationIdPage = async ({ params }: ConversationIdPageProps) => {
+}) => {
   const { conversationId } = params;
   const conversation = await getConversationById(conversationId);
   const messages = await getMessages(conversationId);
