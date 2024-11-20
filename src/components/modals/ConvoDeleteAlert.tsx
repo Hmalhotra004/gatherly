@@ -30,7 +30,12 @@ const ConvoDeleteAlert = ({ children }: ConvoDeleteAlertProps) => {
     setLoading(true);
     try {
       const response = await axios.delete(
-        `/api/conversations/${conversationId}`
+        `/api/conversations/${conversationId}`,
+        {
+          data: {
+            conversationId,
+          },
+        }
       );
       if (response.status === 200) {
         router.push(`/conversations`);

@@ -3,11 +3,7 @@ import db from "@/lib/db";
 import { pusherServer } from "@/lib/pusher";
 import { NextResponse } from "next/server";
 
-interface IParams {
-  conversationId?: string;
-}
-
-export async function DELETE(req: Request, { params }: { params: IParams }) {
+export async function DELETE(req: Request) {
   try {
     const currentUser = await getCurrentUser();
 
@@ -15,7 +11,12 @@ export async function DELETE(req: Request, { params }: { params: IParams }) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
-    const { conversationId } = params;
+    const body = await req.json();
+    const { conversationId } = body;
+
+    if (!conversationId) {
+      return new NextResponse("Invalid Id", { status: 400 });
+    }
 
     const existingConversation = await db.conversation.findUnique({
       where: {
@@ -51,7 +52,7 @@ export async function DELETE(req: Request, { params }: { params: IParams }) {
 
     return NextResponse.json(deletedConversation);
   } catch (err) {
-    console.log(err, "ERROR_DELETE_CONVERSATION");
+    console.error("ERROR_DELETE_CONVERSATION", err);
     return new NextResponse("Internal Error", { status: 500 });
   }
 }
