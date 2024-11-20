@@ -8,9 +8,9 @@ import EmptyState from "@/components/EmptyState";
 const ConversationIdPage = async ({
   params,
 }: {
-  params: { conversationId: string };
+  params: Promise<{ conversationId: string }>;
 }) => {
-  const { conversationId } = params;
+  const conversationId = (await params).conversationId;
   const conversation = await getConversationById(conversationId);
   const messages = await getMessages(conversationId);
 
