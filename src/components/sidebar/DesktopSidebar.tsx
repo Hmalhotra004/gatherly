@@ -3,6 +3,7 @@
 import Avatar from "@/components/Avatar";
 import useRoutes from "@/hooks/useRoutes";
 import { User } from "@prisma/client";
+import ActionTooltip from "../ActionTootip";
 import SettingsModal from "../modals/SettingsModal";
 import ModeToggle from "../ModeToggle";
 import DesktopItem from "./DesktopItem";
@@ -38,10 +39,26 @@ const DesktopSidebar = ({ currentUser }: DestopSidebarProps) => {
         </ul>
       </nav>
       <nav className="mt-4 flex flex-col justify-between items-center gap-y-4">
-        <ModeToggle />
+        <ActionTooltip
+          label="Theme Toggle"
+          side="right"
+          align="center"
+        >
+          <div>
+            <ModeToggle />
+          </div>
+        </ActionTooltip>
         <SettingsModal currentUser={currentUser}>
-          <div className="cursor-pointer hover:opacity-75 transition">
-            <Avatar user={currentUser} />
+          <div>
+            <ActionTooltip
+              label="Profile"
+              side="right"
+              align="center"
+            >
+              <div className="cursor-pointer hover:opacity-75 transition">
+                <Avatar user={currentUser} />
+              </div>
+            </ActionTooltip>
           </div>
         </SettingsModal>
       </nav>
