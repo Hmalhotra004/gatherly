@@ -1,10 +1,10 @@
 "use client";
-import { User } from "@prisma/client";
+import { friend } from "@/types";
 import AddFriendBox from "./AddFriendBox";
 import UserBox from "./UserBox";
 
 interface UserListProps {
-  items: User[];
+  items: friend[];
 }
 
 const UserList = ({ items }: UserListProps) => {
@@ -16,12 +16,18 @@ const UserList = ({ items }: UserListProps) => {
             Friends
           </div>
         </div>
-        {items.map((item) => (
-          <UserBox
-            key={item.id}
-            data={item}
-          />
-        ))}
+        {items.length >= 1 ? (
+          <div>
+            {items.map((item) => (
+              <UserBox
+                key={item.id}
+                data={item}
+              />
+            ))}
+          </div>
+        ) : (
+          <h2>Maybe add a friend</h2>
+        )}
       </div>
       <AddFriendBox />
     </aside>

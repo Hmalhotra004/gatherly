@@ -1,10 +1,10 @@
 "use client";
 import useActiveList from "@/store/useActiveList";
-import { User } from "@prisma/client";
+import { friend } from "@/types";
 import Image from "next/image";
 
 interface AvatarProps {
-  user: User;
+  user: friend;
 }
 
 const Avatar = ({ user }: AvatarProps) => {

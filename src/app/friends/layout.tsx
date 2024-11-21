@@ -1,4 +1,4 @@
-import getUsers from "@/actions/getUsers";
+import getFriends from "@/actions/getFriends";
 import Sidebar from "@/components/sidebar/Sidebar";
 import UserList from "@/components/users/UserList";
 
@@ -7,11 +7,15 @@ export default async function UsersLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const users = await getUsers();
+  const friends = await getFriends();
+  // const currentUser = await getCurrentUser();
   return (
     <Sidebar>
       <div className="h-full">
-        <UserList items={users} />
+        <UserList
+          items={friends}
+          // user={currentUser}
+        />
         {children}
       </div>
     </Sidebar>

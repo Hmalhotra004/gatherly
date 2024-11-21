@@ -8,8 +8,8 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
+import { friend } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { User } from "@prisma/client";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
@@ -23,7 +23,7 @@ import SelectBox from "../SelectBox";
 
 interface MakeGroupModalProps {
   children: React.ReactNode;
-  users: User[];
+  users: friend[];
 }
 
 const formSchema = z.object({

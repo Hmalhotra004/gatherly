@@ -1,10 +1,10 @@
-import { User } from "@prisma/client";
+import { friend } from "@/types";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useCallback } from "react";
 import Avatar from "../Avatar";
 interface UserBoxProps {
-  data: User;
+  data: friend;
 }
 
 const UserBox = ({ data }: UserBoxProps) => {

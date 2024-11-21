@@ -54,9 +54,9 @@ export async function POST(req: NextRequest) {
 
     const newFriend = await db.friend.create({
       data: {
-        userId: currentUser.id,
-        friendId: UserFriendRequest.id,
-        status: "ACCEPTED",
+        userId: UserFriendRequest.id,
+        friendId: currentUser.id,
+        status: "PENDING",
       },
     });
 

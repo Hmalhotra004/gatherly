@@ -49,6 +49,9 @@ const AddFriendBox = () => {
         name,
         code,
       });
+      if (response.status === 200) {
+        toast.success("Friend added successfully");
+      }
       console.log("Name:", name);
       console.log("Code:", code);
       setInputValue("");
@@ -61,7 +64,7 @@ const AddFriendBox = () => {
   return (
     <form
       onSubmit={(e) => onSubmit(e)}
-      className="flex items-center justify-center w-full my-4 px-4 gap-x-2"
+      className="flex items-center justify-center w-full lg:my-4 px-4 gap-x-2"
     >
       <Input
         value={inputValue}

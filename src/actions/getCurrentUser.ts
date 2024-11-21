@@ -11,6 +11,37 @@ const getCurrentUser = async () => {
       where: {
         email: session.user.email as string,
       },
+      include: {
+        friends: {
+          include: {
+            friend: {
+              select: {
+                id: true,
+                name: true,
+                email: true,
+                image: true, // You can add more fields as needed
+              },
+            },
+          },
+        },
+        friendRequests: {
+          include: {
+            friend: {
+              select: {
+                id: true,
+                name: true,
+                email: true,
+                image: true,
+                friendRequests: {
+                  select: {
+                    status: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
     });
 
     if (!currentUser) return null;
