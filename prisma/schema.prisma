@@ -17,6 +17,8 @@ model User {
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
 
+  discriminator String
+
   conversationIds String[]       @db.ObjectId
   conversations   Conversation[] @relation(fields: [conversationIds], references: [id])
 
@@ -28,14 +30,22 @@ model User {
 
   accounts Account[]
   messages Message[]
+
+  @@unique([name, discriminator])
+}
+
+enum RequestType {
+  ACCEPTED
+  PENDING
+  REJECTED
 }
 
 model Friend {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  userId    String   @db.ObjectId
-  friendId  String   @db.ObjectId
-  status    String
-  createdAt DateTime @default(now())
+  id        String      @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String      @db.ObjectId
+  friendId  String      @db.ObjectId
+  status    RequestType
+  createdAt DateTime    @default(now())
 
   user   User @relation("UserFriends", fields: [userId], references: [id], onDelete: Cascade)
   friend User @relation("FriendRequests", fields: [friendId], references: [id], onDelete: Cascade)

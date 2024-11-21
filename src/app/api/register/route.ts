@@ -3,6 +3,10 @@ import db from "@/lib/db";
 import bcrypt from "bcrypt";
 import { NextRequest, NextResponse } from "next/server";
 
+function generateDiscriminator() {
+  return String(Math.floor(1000 + Math.random() * 9000));
+}
+
 export async function POST(req: NextRequest) {
   try {
     const { email, name, password } = await req.json();
@@ -17,6 +21,7 @@ export async function POST(req: NextRequest) {
         name,
         email,
         hashedPassword,
+        discriminator: generateDiscriminator(),
       },
     });
     return NextResponse.json(user);

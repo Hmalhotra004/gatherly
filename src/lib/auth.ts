@@ -47,10 +47,51 @@ export const authOptions: NextAuthOptions = {
           throw new Error("Invalid credentials");
         }
 
-        return user;
+        // Ensure 'discriminator' is either string or undefined
+        const userWithDiscriminator = {
+          ...user,
+          discriminator: user.discriminator ?? undefined, // Replace null with undefined
+        };
+
+        return userWithDiscriminator;
       },
     }),
   ],
+  callbacks: {
+    async signIn({ user }) {
+      if (!user.discriminator) {
+        let discriminator = ""; // Initialize with an empty string
+        let isUnique = false;
+
+        while (!isUnique) {
+          // Generate a random 4-digit discriminator
+          discriminator = String(Math.floor(1000 + Math.random() * 9000));
+
+          // Check for uniqueness
+          const conflict = await db.user.findUnique({
+            where: {
+              name_discriminator: {
+                name: user.name || "unknown",
+                discriminator,
+              },
+            },
+          });
+
+          if (!conflict) {
+            isUnique = true;
+          }
+        }
+
+        // Update the user with the new discriminator
+        await db.user.update({
+          where: { id: user.id },
+          data: { discriminator },
+        });
+      }
+
+      return true;
+    },
+  },
   debug: process.env.NODE_ENV !== "development",
   session: {
     strategy: "jwt",

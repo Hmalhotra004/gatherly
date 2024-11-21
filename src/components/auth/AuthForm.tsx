@@ -53,7 +53,7 @@ const AuthForm = ({ variant, setVariant }: AuthFormProps) => {
   const router = useRouter();
 
   useEffect(() => {
-    if (session?.status === "authenticated") router.push("/users");
+    if (session?.status === "authenticated") router.push("/friends");
   }, [session, router]);
 
   const toggleVariant = useCallback(() => {
