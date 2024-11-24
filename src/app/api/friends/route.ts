@@ -47,7 +47,7 @@ export async function POST(req: NextRequest) {
       return new NextResponse(
         "Friend request already sent or already friends",
         {
-          status: 400,
+          status: 409,
         }
       );
     }

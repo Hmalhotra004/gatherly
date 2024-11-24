@@ -1,6 +1,6 @@
 "use client";
 
-import EmojiPicker from "@/components/EmojiPicker";
+import EmojiPicker from "@/components/chat/EmojiPicker";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import useConversation from "@/hooks/useConversation";

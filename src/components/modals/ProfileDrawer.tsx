@@ -1,22 +1,22 @@
 "use client";
 
+import Avatar from "@/components/avatar/Avatar";
+import AvatarGroup from "@/components/avatar/AvatarGroup";
+import ConvoDeleteAlert from "@/components/modals/ConvoDeleteAlert";
 import useOtherUser from "@/hooks/useOtherUser";
-// import { Dialog, Transition } from "@headlessui/react";
 import useActiveList from "@/store/useActiveList";
 import { Conversation, User } from "@prisma/client";
 import { format } from "date-fns";
 import { Trash2 } from "lucide-react";
 import { useMemo } from "react";
-import Avatar from "./Avatar";
-import AvatarGroup from "./AvatarGroup";
-import ConvoDeleteAlert from "./modals/ConvoDeleteAlert";
+
 import {
   Sheet,
   SheetContent,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "./ui/sheet";
+} from "@/components/ui/sheet";
 
 interface ProfileDrawerProps {
   data: Conversation & {

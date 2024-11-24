@@ -1,7 +1,7 @@
 import getFriendRequests from "@/actions/getFriendRequests";
 import getFriends from "@/actions/getFriends";
 import Sidebar from "@/components/sidebar/Sidebar";
-import UserList from "@/components/users/UserList";
+import FriendList from "@/components/friends/FriendList";
 
 export default async function UsersLayout({
   children,
@@ -13,7 +13,7 @@ export default async function UsersLayout({
   return (
     <Sidebar>
       <div className="h-full">
-        <UserList
+        <FriendList
           friends={friends}
           friendRequests={friendRequests}
         />

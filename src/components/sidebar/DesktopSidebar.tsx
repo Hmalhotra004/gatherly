@@ -1,11 +1,11 @@
 "use client";
 
-import Avatar from "@/components/Avatar";
+import ActionTooltip from "@/components/ActionTootip";
+import Avatar from "@/components/avatar/Avatar";
+import SettingsModal from "@/components/modals/SettingsModal";
+import ModeToggle from "@/components/ModeToggle";
 import useRoutes from "@/hooks/useRoutes";
 import { User } from "@prisma/client";
-import ActionTooltip from "../ActionTootip";
-import SettingsModal from "../modals/SettingsModal";
-import ModeToggle from "../ModeToggle";
 import DesktopItem from "./DesktopItem";
 
 interface DestopSidebarProps {

@@ -60,7 +60,9 @@ const AddFriendBox = () => {
       console.log("Code:", code);
       setInputValue("");
     } catch (error) {
-      if (axios.isAxiosError(error) && error.response?.status === 404) {
+      if (axios.isAxiosError(error) && error.response?.status === 409) {
+        toast.error(error.response.data);
+      } else if (axios.isAxiosError(error) && error.response?.status === 404) {
         toast.error(`User doesn't exist`);
       } else {
         toast.error("Something went wrong");

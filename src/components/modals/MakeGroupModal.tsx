@@ -19,7 +19,7 @@ import z from "zod";
 import AuthInput from "../auth/AuthInput";
 import AuthLabel from "../auth/AuthLabel";
 import Button from "../Button";
-import SelectBox from "../SelectBox";
+import SelectBox from "../conversations/SelectBox";
 
 interface MakeGroupModalProps {
   children: React.ReactNode;

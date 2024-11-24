@@ -7,8 +7,8 @@ import { format } from "date-fns";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useCallback, useMemo } from "react";
-import Avatar from "../Avatar";
-import AvatarGroup from "../AvatarGroup";
+import Avatar from "../avatar/Avatar";
+import AvatarGroup from "../avatar/AvatarGroup";
 
 interface ConversationBoxProps {
   data: FullConversationType;

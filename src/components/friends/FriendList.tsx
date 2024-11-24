@@ -1,15 +1,16 @@
 "use client";
+import { cn } from "@/lib/utils";
 import { friend } from "@/types";
-import FriendModal from "../modals/FriendModal";
+import FriendModal from "../modals/FriendRequestModal";
 import AddFriendBox from "./AddFriendBox";
-import UserBox from "./UserBox";
+import FriendBox from "./FriendBox";
 
-interface UserListProps {
+interface FriendListProps {
   friends: friend[];
   friendRequests: friend[];
 }
 
-const UserList = ({ friends, friendRequests }: UserListProps) => {
+const FriendList = ({ friends, friendRequests }: FriendListProps) => {
   return (
     <aside className="fixed inset-y-0 pb-20 lg:pb-0 lg:left-20 lg:w-80 flex overflow-y-auto border-r border-gray-200 w-full left-0 flex-col">
       <div className="px-5 flex-grow">
@@ -19,7 +20,9 @@ const UserList = ({ friends, friendRequests }: UserListProps) => {
           </div>
           <div className="ml-auto">
             <FriendModal friends={friendRequests}>
-              <button className="bg-gray-300 rounded-full z-50">
+              <button
+                className={cn("bg-gray-300 rounded-full z-50 px-2 py-[2px]")}
+              >
                 {friendRequests.length}
               </button>
             </FriendModal>
@@ -28,7 +31,7 @@ const UserList = ({ friends, friendRequests }: UserListProps) => {
         {friends.length >= 1 ? (
           <div>
             {friends.map((friend) => (
-              <UserBox
+              <FriendBox
                 key={friend.id}
                 data={friend}
               />
@@ -43,4 +46,4 @@ const UserList = ({ friends, friendRequests }: UserListProps) => {
   );
 };
 
-export default UserList;
+export default FriendList;

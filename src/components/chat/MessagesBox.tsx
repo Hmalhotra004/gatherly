@@ -3,7 +3,7 @@ import clsx from "clsx";
 import { format } from "date-fns";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
-import Avatar from "../Avatar";
+import Avatar from "../avatar/Avatar";
 import ImageModal from "../modals/ImageModal";
 
 interface MessageBoxProps {

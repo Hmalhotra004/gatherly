@@ -1,6 +1,6 @@
 "use client";
 
-import Avatar from "@/components/Avatar";
+import Avatar from "@/components/avatar/Avatar";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -14,12 +14,12 @@ import axios from "axios";
 import { useState } from "react";
 import toast from "react-hot-toast";
 
-interface FriendModalProps {
+interface FriendRequestModalProps {
   children: React.ReactNode;
   friends: friend[];
 }
 
-const FriendModal = ({ children, friends }: FriendModalProps) => {
+const FriendRequestModal = ({ children, friends }: FriendRequestModalProps) => {
   const [open, setOpen] = useState(false);
 
   async function handleAccept(friend: friend) {
@@ -60,38 +60,44 @@ const FriendModal = ({ children, friends }: FriendModalProps) => {
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Add Friend</DialogTitle>
+          <DialogTitle>Friend Requests</DialogTitle>
         </DialogHeader>
-        <div className="flex flex-col">
-          {friends.map((friend) => {
-            return (
-              <div
-                key={friend.id}
-                className="flex items-center gap-x-2"
-              >
-                <Avatar user={friend} />
-                <h2>{friend.name}</h2>
-                <div className="ml-auto flex gap-x-4">
-                  <Button
-                    variant="blue"
-                    onClick={() => handleAccept(friend)}
+        <div className="flex flex-col gap-y-4">
+          {friends && friends.length > 0 ? (
+            <div className="flex flex-col gap-y-4">
+              {friends.map((friend) => {
+                return (
+                  <div
+                    key={friend.id}
+                    className="flex items-center gap-x-2"
                   >
-                    Accept
-                  </Button>
-                  <Button
-                    variant="destructive"
-                    onClick={() => handleDecline(friend)}
-                  >
-                    Decline
-                  </Button>
-                </div>
-              </div>
-            );
-          })}
+                    <Avatar user={friend} />
+                    <h2>{friend.name}</h2>
+                    <div className="ml-auto flex gap-x-4">
+                      <Button
+                        variant="blue"
+                        onClick={() => handleAccept(friend)}
+                      >
+                        Accept
+                      </Button>
+                      <Button
+                        variant="destructive"
+                        onClick={() => handleDecline(friend)}
+                      >
+                        Decline
+                      </Button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            <h2>No friend requests</h2>
+          )}
         </div>
       </DialogContent>
     </Dialog>
   );
 };
 
-export default FriendModal;
+export default FriendRequestModal;
