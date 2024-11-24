@@ -49,15 +49,22 @@ const AddFriendBox = () => {
         name,
         code,
       });
+      if (response.status === 404) {
+        toast.success("User doesnt exist");
+      }
+
       if (response.status === 200) {
-        toast.success("Friend added successfully");
+        toast.success("Friend request sent");
       }
       console.log("Name:", name);
       console.log("Code:", code);
       setInputValue("");
-    } catch (err) {
-      toast.error("Something went wrong");
-      console.error(err);
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.status === 404) {
+        toast.error(`User doesn't exist`);
+      } else {
+        toast.error("Something went wrong");
+      }
     }
   }
 

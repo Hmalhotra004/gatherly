@@ -25,8 +25,8 @@ model User {
   seenMessageIds String[]  @db.ObjectId
   seenMessages   Message[] @relation("Seen", fields: [seenMessageIds], references: [id])
 
-  friends        Friend[] @relation("UserFriends")
-  friendRequests Friend[] @relation("FriendRequests")
+  friends1 Friend[] @relation("User1")
+  friends2 Friend[] @relation("User2")
 
   accounts Account[]
   messages Message[]
@@ -37,18 +37,19 @@ model User {
 enum RequestType {
   ACCEPTED
   PENDING
-  REJECTED
 }
 
 model Friend {
   id        String      @id @default(auto()) @map("_id") @db.ObjectId
-  userId    String      @db.ObjectId
-  friendId  String      @db.ObjectId
+  user1Id   String      @db.ObjectId
+  user2Id   String      @db.ObjectId
   status    RequestType
   createdAt DateTime    @default(now())
 
-  user   User @relation("UserFriends", fields: [userId], references: [id], onDelete: Cascade)
-  friend User @relation("FriendRequests", fields: [friendId], references: [id], onDelete: Cascade)
+  user1 User @relation("User1", fields: [user1Id], references: [id], onDelete: Cascade)
+  user2 User @relation("User2", fields: [user2Id], references: [id], onDelete: Cascade)
+
+  @@unique([user1Id, user2Id])
 }
 
 model Account {

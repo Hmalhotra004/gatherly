@@ -2,7 +2,7 @@ import getCurrentUser from "@/actions/getCurrentUser";
 import db from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function POST(req: NextRequest) {
+export async function PUT(req: NextRequest) {
   try {
     const currentUser = await getCurrentUser();
 
@@ -10,36 +10,21 @@ export async function POST(req: NextRequest) {
       return new NextResponse("Unauthorized", { status: 401 });
 
     const body = await req.json();
-    const { name, code } = body;
+    const { friendId } = body;
 
-    if (!name || !code) {
+    if (!friendId) {
       return new NextResponse("Missing info", { status: 400 });
     }
-
-    if (name === currentUser.name && code === currentUser.discriminator) {
-      return new NextResponse("Cannot add yourself as a friend", {
-        status: 400,
-      });
-    }
-
-    const UserFriendRequest = await db.user.findUnique({
-      where: {
-        name_discriminator: {
-          name,
-          discriminator: code,
-        },
-      },
-    });
-
-    if (!UserFriendRequest)
-      return new NextResponse("User not found", { status: 404 });
 
     const existingFriendRequest = await db.friend.findFirst({
       where: {
         OR: [
-          { user1Id: currentUser.id, user2Id: UserFriendRequest.id },
-          { user1Id: UserFriendRequest.id, user2Id: currentUser.id },
+          { user1Id: currentUser.id, user2Id: friendId },
+          { user1Id: friendId, user2Id: currentUser.id },
         ],
+        AND: {
+          status: "ACCEPTED",
+        },
       },
     });
 
@@ -52,11 +37,15 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const newFriend = await db.friend.create({
+    const newFriend = await db.friend.update({
+      where: {
+        user1Id_user2Id: {
+          user1Id: friendId,
+          user2Id: currentUser.id,
+        },
+      },
       data: {
-        user2Id: UserFriendRequest.id,
-        user1Id: currentUser.id,
-        status: "PENDING",
+        status: "ACCEPTED",
       },
     });
 
