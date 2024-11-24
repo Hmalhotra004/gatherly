@@ -10,6 +10,8 @@ interface AuthInputProps {
   disabled?: boolean;
   fieldState?: ControllerFieldState;
   placeholder?: string;
+  value?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 const AuthInput = ({
@@ -19,6 +21,8 @@ const AuthInput = ({
   disabled,
   fieldState,
   placeholder,
+  value,
+  onChange,
 }: AuthInputProps) => {
   return (
     <Input
@@ -33,6 +37,8 @@ const AuthInput = ({
       type={type}
       autoComplete="off"
       placeholder={placeholder}
+      value={value}
+      onChange={onChange}
       {...field}
     />
   );
