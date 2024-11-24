@@ -1,11 +1,13 @@
 import { friend } from "@/types";
 
 import {
-  Dialog,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuTrigger,
+} from "@/components/ui/context-menu";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 interface FriendModalProps {
   children: React.ReactNode;
@@ -13,14 +15,32 @@ interface FriendModalProps {
 }
 
 const FriendModal = ({ children, friend }: FriendModalProps) => {
+  async function handleRemove() {
+    try {
+      const response = await axios.delete("api/friends/", {
+        data: {
+          friendId: friend.id,
+        },
+      });
+      if (response.status === 200) {
+        toast.success("Friend removed");
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  }
   return (
-    <Dialog>
-      <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogHeader>
-        <DialogTitle>{friend.image}</DialogTitle>
-        {/* <DialogTitle>{friend.name}</DialogTitle> */}
-      </DialogHeader>
-    </Dialog>
+    <ContextMenu>
+      <ContextMenuTrigger asChild>{children}</ContextMenuTrigger>
+      <ContextMenuContent>
+        <ContextMenuItem
+          className="text-red-800 focus:text-red-900 cursor-pointer"
+          onClick={handleRemove}
+        >
+          Remove
+        </ContextMenuItem>
+      </ContextMenuContent>
+    </ContextMenu>
   );
 };
 

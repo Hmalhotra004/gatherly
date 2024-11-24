@@ -3,6 +3,7 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import Avatar from "../avatar/Avatar";
+import FriendModal from "./FriendModal";
 interface FriendBoxProps {
   data: friend;
 }
@@ -26,21 +27,17 @@ const FriendBox = ({ data }: FriendBoxProps) => {
   }
 
   return (
-    <div
-      onClick={handleClick}
-      className="w-full flex items-center space-x-3 bg-white p-3 hover:bg-neutral-100 rounded-lg transition cursor-pointer group"
-    >
-      <Avatar user={data} />
-      <div className="flex justify-end items-center mb-1">
-        <p className="text-sm font-medium text-gray-900">{data.name}</p>
-        {/* <FriendModal friend={data}>
-          <Ellipsis
-            className="group-hover:block hidden transition text-gray-800 ml-auto"
-            onClick={(e) => e.stopPropagation()}
-          />
-        </FriendModal> */}
+    <FriendModal friend={data}>
+      <div
+        onClick={handleClick}
+        className="w-full flex items-center space-x-3 bg-white p-3 hover:bg-neutral-100 rounded-lg transition cursor-pointer group"
+      >
+        <Avatar user={data} />
+        <div className="flex justify-end items-center mb-1">
+          <p className="text-sm font-medium text-gray-900">{data.name}</p>
+        </div>
       </div>
-    </div>
+    </FriendModal>
   );
 };
 
