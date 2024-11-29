@@ -12,6 +12,7 @@ interface AuthInputProps {
   placeholder?: string;
   value?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  autoComplete?: string;
 }
 
 const AuthInput = ({
@@ -23,6 +24,7 @@ const AuthInput = ({
   placeholder,
   value,
   onChange,
+  autoComplete,
 }: AuthInputProps) => {
   return (
     <Input
@@ -35,7 +37,7 @@ const AuthInput = ({
       )}
       id={id}
       type={type}
-      autoComplete="off"
+      autoComplete={autoComplete ?? "off"}
       placeholder={placeholder}
       value={value}
       onChange={onChange}

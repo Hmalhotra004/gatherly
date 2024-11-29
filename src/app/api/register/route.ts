@@ -1,11 +1,8 @@
 "use server";
+import getUniqueDiscriminator from "@/actions/getUniqueDiscriminator";
 import db from "@/lib/db";
 import bcrypt from "bcrypt";
 import { NextRequest, NextResponse } from "next/server";
-
-function generateDiscriminator() {
-  return String(Math.floor(1000 + Math.random() * 9000));
-}
 
 export async function POST(req: NextRequest) {
   try {
@@ -16,14 +13,17 @@ export async function POST(req: NextRequest) {
 
     const hashedPassword = await bcrypt.hash(password, 12);
 
+    const code = await getUniqueDiscriminator(name);
+
     const user = await db.user.create({
       data: {
         name,
         email,
         hashedPassword,
-        discriminator: generateDiscriminator(),
+        discriminator: code,
       },
     });
+
     return NextResponse.json(user);
   } catch (err) {
     console.log("REGISTRATION_ERROR", err);

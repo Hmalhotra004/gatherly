@@ -1,3 +1,4 @@
+import getUniqueDiscriminator from "@/actions/getUniqueDiscriminator";
 import db from "@/lib/db";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import bcrypt from "bcrypt";
@@ -47,54 +48,37 @@ export const authOptions: NextAuthOptions = {
           throw new Error("Invalid credentials");
         }
 
-        // Ensure 'discriminator' is either string or undefined
-        const userWithDiscriminator = {
+        return {
           ...user,
-          discriminator: user.discriminator ?? undefined, // Replace null with undefined
+          discriminator: user.discriminator ?? undefined,
         };
-
-        return userWithDiscriminator;
       },
     }),
   ],
-  callbacks: {
-    async signIn({ user }) {
-      if (!user.discriminator) {
-        let discriminator = ""; // Initialize with an empty string
-        let isUnique = false;
-
-        while (!isUnique) {
-          // Generate a random 4-digit discriminator
-          discriminator = String(Math.floor(1000 + Math.random() * 9000));
-
-          // Check for uniqueness
-          const conflict = await db.user.findUnique({
-            where: {
-              name_discriminator: {
-                name: user.name || "unknown",
-                discriminator,
-              },
-            },
-          });
-
-          if (!conflict) {
-            isUnique = true;
-          }
-        }
-
-        // Update the user with the new discriminator
-        await db.user.update({
-          where: { id: user.id },
-          data: { discriminator },
-        });
-      }
-
-      return true;
-    },
+  pages: {
+    signIn: "/log-in",
+    newUser: "/sign-up",
   },
   debug: process.env.NODE_ENV !== "development",
   session: {
     strategy: "jwt",
   },
   secret: process.env.NEXTAUTH_SECRET,
+  callbacks: {
+    async signIn({ user }) {
+      if (!user.discriminator) {
+        const uniqueDiscriminator = await getUniqueDiscriminator(
+          user.name || "user"
+        );
+        await db.user.update({
+          where: { id: user.id },
+          data: { discriminator: uniqueDiscriminator },
+        });
+      }
+      return true;
+    },
+    async redirect({ url, baseUrl }) {
+      return baseUrl;
+    },
+  },
 };

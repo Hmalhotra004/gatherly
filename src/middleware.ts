@@ -2,7 +2,8 @@ import withAuth from "next-auth/middleware";
 
 export default withAuth({
   pages: {
-    signIn: "/",
+    signIn: "/log-in",
+    newUser: "/sign-up",
   },
 });
 
