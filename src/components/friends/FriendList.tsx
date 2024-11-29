@@ -1,6 +1,9 @@
 "use client";
+import { pusherClient } from "@/lib/pusher";
 import { cn } from "@/lib/utils";
 import { friend } from "@/types";
+import { User } from "@prisma/client";
+import { useEffect, useState } from "react";
 import FriendModal from "../modals/FriendRequestModal";
 import AddFriendBox from "./AddFriendBox";
 import FriendBox from "./FriendBox";
@@ -8,9 +11,34 @@ import FriendBox from "./FriendBox";
 interface FriendListProps {
   friends: friend[];
   friendRequests: friend[];
+  currentUser: User;
 }
 
-const FriendList = ({ friends, friendRequests }: FriendListProps) => {
+const FriendList = ({
+  friends,
+  friendRequests,
+  currentUser,
+}: FriendListProps) => {
+  const [friendReqs, setFriendReqs] = useState(friendRequests);
+  useEffect(() => {
+    pusherClient.subscribe(currentUser.id);
+
+    async function handleRequest(newReq: friend) {
+      setFriendReqs((current) => {
+        if (!current.some((req) => req.id === newReq.id)) {
+          return [newReq, ...current];
+        }
+        return current;
+      });
+    }
+
+    pusherClient.bind("request:pending", handleRequest);
+    return () => {
+      pusherClient.unsubscribe(currentUser.id);
+      pusherClient.unbind("request:pending", handleRequest);
+    };
+  }, [currentUser]);
+
   return (
     <aside className="fixed inset-y-0 pb-20 lg:pb-0 lg:left-20 lg:w-80 flex overflow-y-auto border-r border-gray-200 w-full left-0 flex-col">
       <div className="px-5 flex-grow">
@@ -23,7 +51,7 @@ const FriendList = ({ friends, friendRequests }: FriendListProps) => {
               <button
                 className={cn("bg-gray-300 rounded-full z-50 px-2 py-[2px]")}
               >
-                {friendRequests.length}
+                {friendReqs.length}
               </button>
             </FriendModal>
           </div>

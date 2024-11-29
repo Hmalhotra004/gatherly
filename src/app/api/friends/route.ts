@@ -1,5 +1,6 @@
 import getCurrentUser from "@/actions/getCurrentUser";
 import db from "@/lib/db";
+import { pusherServer } from "@/lib/pusher";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function DELETE(req: NextRequest) {
@@ -113,6 +114,12 @@ export async function POST(req: NextRequest) {
         status: "PENDING",
       },
     });
+
+    await pusherServer.trigger(
+      UserFriendRequest.id,
+      "request:pending",
+      newFriend
+    );
 
     return NextResponse.json(newFriend);
   } catch (e) {
