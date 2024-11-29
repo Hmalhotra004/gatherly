@@ -20,6 +20,8 @@ const FriendList = ({
   currentUser,
 }: FriendListProps) => {
   const [friendReqs, setFriendReqs] = useState(friendRequests);
+  const [friendState, setFriendState] = useState(friends);
+
   useEffect(() => {
     pusherClient.subscribe(currentUser.id);
 
@@ -32,10 +34,22 @@ const FriendList = ({
       });
     }
 
+    async function handleAccept(newFrd: friend) {
+      setFriendState((current) => {
+        if (!current.some((frd) => frd.id === newFrd.id)) {
+          return [newFrd, ...current];
+        }
+        return current;
+      });
+    }
+
     pusherClient.bind("request:pending", handleRequest);
+    pusherClient.bind("request:accepted", handleAccept);
+
     return () => {
       pusherClient.unsubscribe(currentUser.id);
       pusherClient.unbind("request:pending", handleRequest);
+      pusherClient.unbind("request:accepted", handleAccept);
     };
   }, [currentUser]);
 
@@ -47,7 +61,7 @@ const FriendList = ({
             Friends
           </div>
           <div className="ml-auto">
-            <FriendModal friends={friendRequests}>
+            <FriendModal friends={friendReqs}>
               <button
                 className={cn("bg-gray-300 rounded-full z-50 px-2 py-[2px]")}
               >
@@ -58,7 +72,7 @@ const FriendList = ({
         </div>
         {friends.length >= 1 ? (
           <div>
-            {friends.map((friend) => (
+            {friendState.map((friend) => (
               <FriendBox
                 key={friend.id}
                 data={friend}
