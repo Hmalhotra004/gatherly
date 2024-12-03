@@ -130,6 +130,10 @@ const LoginPage = () => {
                   )}
                 />
 
+                <FormMessage className="text-lg">
+                  {form.formState.errors.root?.message}
+                </FormMessage>
+
                 <Button
                   variant="blue"
                   disabled={isLoading}
