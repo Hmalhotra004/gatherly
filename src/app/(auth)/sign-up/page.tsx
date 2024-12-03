@@ -2,7 +2,6 @@
 
 import AuthInput from "@/components/auth/AuthInput";
 import AuthLabel from "@/components/auth/AuthLabel";
-import AuthSocialButton from "@/components/auth/AuthSocialButton";
 import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signIn, useSession } from "next-auth/react";
@@ -10,7 +9,6 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import { BsGithub, BsGoogle } from "react-icons/bs";
 import { z } from "zod";
 
 import {
@@ -57,7 +55,11 @@ const SignUpPage = () => {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
     try {
-      const response = await axios.post("/api/register", values);
+      const response = await axios.post("/api/register", {
+        email: values.email,
+        name: values.name,
+        password: values.password,
+      });
       if (response.status === 200) {
         form.reset();
         signIn("credentials", values);
@@ -70,17 +72,6 @@ const SignUpPage = () => {
     }
   }
 
-  const socialAction = (action: string) => {
-    setIsLoading(true);
-    signIn(action, {
-      redirect: false,
-    })
-      .then((callback) => {
-        if (callback?.error) toast.error("Invaild credentials");
-        if (callback?.ok && !callback?.error) toast.success("Logged in");
-      })
-      .finally(() => setIsLoading(false));
-  };
   return (
     <div className="flex min-h-full flex-col justify-center pb-12 pt-4 sm:px-6 lg:px-8 bg-gray-100">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
@@ -184,30 +175,8 @@ const SignUpPage = () => {
               </form>
             </Form>
 
-            <div className="mt-6">
-              <div className="relative">
-                <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-gray-300" />
-                </div>
-                <div className="relative flex justify-center text-sm">
-                  <span className="bg-white px-2 text-gray-500">
-                    Or continue with
-                  </span>
-                </div>
-              </div>
-              <div className="mt-6 flex gap-2">
-                <AuthSocialButton
-                  icon={BsGithub}
-                  onClick={() => socialAction("github")}
-                />
-                <AuthSocialButton
-                  icon={BsGoogle}
-                  onClick={() => socialAction("google")}
-                />
-              </div>
-            </div>
             <div className="flex gap-2 justify-center text-sm mt-6 px-2 text-gray-500">
-              <div>Already have and account</div>
+              <div>Already have an account</div>
               <a
                 href="/log-in"
                 className="underline cursor-pointer"
