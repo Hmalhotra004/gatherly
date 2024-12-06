@@ -27,19 +27,19 @@ const FriendList = ({
 
     async function handleRequest(newReq: friend) {
       setFriendReqs((current) => {
-        if (!current.some((req) => req.id === newReq.id)) {
-          return [newReq, ...current];
+        if (current.some((req) => req.id === newReq.id)) {
+          return current;
         }
-        return current;
+        return [newReq, ...current];
       });
     }
 
     async function handleAccept(newFrd: friend) {
       setFriendState((current) => {
-        if (!current.some((frd) => frd.id === newFrd.id)) {
-          return [newFrd, ...current];
+        if (current.some((frd) => frd.id === newFrd.id)) {
+          return current;
         }
-        return current;
+        return [newFrd, ...current];
       });
     }
 
@@ -51,7 +51,15 @@ const FriendList = ({
       pusherClient.unbind("request:pending", handleRequest);
       pusherClient.unbind("request:accepted", handleAccept);
     };
-  }, [currentUser]);
+  }, [currentUser.id]);
+
+  useEffect(() => {
+    setFriendReqs(friendRequests);
+  }, [friendRequests]);
+
+  useEffect(() => {
+    setFriendState(friends);
+  }, [friends]);
 
   return (
     <aside className="fixed inset-y-0 pb-20 lg:pb-0 lg:left-20 lg:w-80 flex overflow-y-auto border-r border-gray-200 w-full left-0 flex-col">
