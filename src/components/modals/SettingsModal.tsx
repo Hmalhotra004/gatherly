@@ -3,7 +3,7 @@ import AuthInput from "@/components/auth/AuthInput";
 import { Button } from "@/components/ui/button";
 import { User } from "@prisma/client";
 import axios from "axios";
-import { Clipboard, Edit } from "lucide-react";
+import { Clipboard, Edit, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
@@ -16,6 +16,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import Image from "next/image";
+import DeleteAccountAlert from "./DeleteAccountAlert";
+import ProfileImageModal from "./ProfileImageModal";
 
 interface SettingsModalProps {
   currentUser: User;
@@ -23,9 +26,9 @@ interface SettingsModalProps {
 }
 
 const SettingsModal = ({ currentUser, children }: SettingsModalProps) => {
+  const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isEditingName, setIsEditingName] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
   const [name, setName] = useState(currentUser.name || "");
   const router = useRouter();
 
@@ -44,6 +47,24 @@ const SettingsModal = ({ currentUser, children }: SettingsModalProps) => {
     toast.success("copied to clipboard");
   }
 
+  function handleCancel() {
+    setIsEditingName(false);
+    setName(currentUser.name!);
+  }
+
+  async function removeImage() {
+    try {
+      setIsLoading(true);
+      const response = await axios.delete(`/api/settings/image`);
+      if (response.status === 200) {
+        router.refresh();
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Something went wrong");
+    }
+  }
+
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     setIsLoading(true);
@@ -55,7 +76,7 @@ const SettingsModal = ({ currentUser, children }: SettingsModalProps) => {
         return;
       }
 
-      const response = await axios.patch(`/api/settings`, {
+      const response = await axios.patch(`/api/settings/name`, {
         name: updatedName,
       });
 
@@ -85,7 +106,7 @@ const SettingsModal = ({ currentUser, children }: SettingsModalProps) => {
             Edit your public information.
           </DialogDescription>
         </DialogHeader>
-        <div className="space-y-4">
+        <div className="space-y-2 pb-4 border-b border-gray-400">
           <div className="space-y-1">
             <p>Name:</p>
             <div>
@@ -114,6 +135,15 @@ const SettingsModal = ({ currentUser, children }: SettingsModalProps) => {
                     disabled={isLoading}
                   />
                   <Button
+                    type="button"
+                    variant="ghost"
+                    className="ml-auto"
+                    onClick={handleCancel}
+                    disabled={isLoading}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
                     type="submit"
                     variant="blue"
                     className="ml-auto"
@@ -125,6 +155,34 @@ const SettingsModal = ({ currentUser, children }: SettingsModalProps) => {
               )}
             </div>
           </div>
+          <div className="space-y-2">
+            <p>Image:</p>
+            <main className="flex items-center gap-x-4 justify-start">
+              <div className="relative h-14 w-14">
+                <Image
+                  src={currentUser?.image || "/placeholder.jpeg"}
+                  alt="avatar"
+                  fill
+                  className="rounded-full"
+                />
+                {currentUser?.image && (
+                  <button
+                    onClick={removeImage}
+                    className="bg-rose-500 text-white p-1 rounded-full absolute top-0 right-0 shadow-sm"
+                    type="button"
+                  >
+                    <X className="h-3 w-3" />
+                  </button>
+                )}
+              </div>
+              <ProfileImageModal>
+                <Button variant="ghost">Change</Button>
+              </ProfileImageModal>
+            </main>
+          </div>
+        </div>
+        <div className="flex justify-end">
+          <DeleteAccountAlert />
         </div>
       </DialogContent>
     </Dialog>

@@ -1,5 +1,5 @@
 "use client";
-import { UploadDropzone } from "@/lib/uploadthing";
+import { UploadButton } from "@uploadthing/react";
 import { X } from "lucide-react";
 import Image from "next/image";
 
@@ -33,7 +33,7 @@ const FileUpload = ({ onChange, value, endpoint }: Props) => {
   }
 
   return (
-    <UploadDropzone
+    <UploadButton
       endpoint={endpoint}
       onClientUploadComplete={(res) => {
         onChange(res?.[0].url);
