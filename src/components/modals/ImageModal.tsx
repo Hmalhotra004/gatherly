@@ -20,7 +20,7 @@ const ImageModal = ({ children, src }: ImageModalProps) => {
     <Dialog>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent
-        className="bg-transparent border-0 shadow-none"
+        className="bg-transparent border-0 shadow-none focus-visible:border-0 focus-visible:ring-0 ring-0 focus-visible:ring-offset-0 ring-offset-0"
         hideClose
       >
         <VisuallyHidden>
