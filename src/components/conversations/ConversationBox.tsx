@@ -44,7 +44,7 @@ const ConversationBox = ({ data, selected }: ConversationBoxProps) => {
   }, [lastMessage, userEmail]);
 
   const lastMessageText = useMemo(() => {
-    if (lastMessage?.image) return "Sent and image";
+    if (lastMessage?.image) return "Sent an image";
 
     if (lastMessage?.body) return lastMessage.body;
 

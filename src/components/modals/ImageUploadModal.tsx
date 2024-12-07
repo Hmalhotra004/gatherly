@@ -1,5 +1,8 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
+import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
+import AttachmentUpload from "@/components/upload/AttachmentUpload";
 import useConversation from "@/hooks/useConversation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { DialogTitle } from "@radix-ui/react-dialog";
@@ -8,15 +11,13 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { z } from "zod";
-import Button from "../Button";
-import FileUpload from "../FileUpload";
+
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTrigger,
-} from "../ui/dialog";
-import { Form, FormControl, FormField, FormItem } from "../ui/form";
+} from "@/components/ui/dialog";
 
 interface ImageUploadModalProps {
   children: React.ReactNode;
@@ -71,8 +72,7 @@ const ImageUploadModal = ({ children }: ImageUploadModalProps) => {
               render={({ field }) => (
                 <FormItem className="flex items-center justify-center">
                   <FormControl>
-                    <FileUpload
-                      endpoint="image"
+                    <AttachmentUpload
                       onChange={field.onChange}
                       value={field.value}
                     />
@@ -81,7 +81,13 @@ const ImageUploadModal = ({ children }: ImageUploadModalProps) => {
               )}
             />
             <div className="mt-4">
-              <Button fullWidth>Send</Button>
+              <Button
+                className="w-full"
+                variant="blue"
+                type="submit"
+              >
+                Send
+              </Button>
             </div>
           </form>
         </Form>

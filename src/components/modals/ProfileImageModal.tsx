@@ -1,5 +1,8 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
+import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
+import ProfileUpload from "@/components/upload/ProfileUpload";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { DialogTitle } from "@radix-ui/react-dialog";
 import axios from "axios";
@@ -8,15 +11,13 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { z } from "zod";
-import Button from "../Button";
-import FileUpload from "../FileUpload";
+
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTrigger,
-} from "../ui/dialog";
-import { Form, FormControl, FormField, FormItem } from "../ui/form";
+} from "@/components/ui/dialog";
 
 interface ProfileImageModalProps {
   children: React.ReactNode;
@@ -41,9 +42,13 @@ const ProfileImageModal = ({ children }: ProfileImageModalProps) => {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
     try {
-      const response = await axios.patch(`/api/settings`, values);
+      const response = await axios.patch(`/api/settings/image`, {
+        image: values.imageUrl,
+      });
       if (response.status === 200) {
         router.refresh();
+        form.reset();
+        setOpen(false);
       }
     } catch (err) {
       console.log(err);
@@ -56,7 +61,10 @@ const ProfileImageModal = ({ children }: ProfileImageModalProps) => {
   return (
     <Dialog
       open={open}
-      onOpenChange={setOpen}
+      onOpenChange={() => {
+        setOpen(!open);
+        form.reset();
+      }}
     >
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="space-y-4">
@@ -71,8 +79,7 @@ const ProfileImageModal = ({ children }: ProfileImageModalProps) => {
               render={({ field }) => (
                 <FormItem className="flex items-center justify-center">
                   <FormControl>
-                    <FileUpload
-                      endpoint="image"
+                    <ProfileUpload
                       onChange={field.onChange}
                       value={field.value}
                     />
@@ -85,10 +92,12 @@ const ProfileImageModal = ({ children }: ProfileImageModalProps) => {
               onClick={(e) => e.stopPropagation()}
             >
               <Button
-                fullWidth
+                type="submit"
+                variant="blue"
+                className="w-full"
                 disabled={isLoading}
               >
-                Send
+                Save
               </Button>
             </div>
           </form>
