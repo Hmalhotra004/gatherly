@@ -1,8 +1,8 @@
 "use client";
 
-import FileUpload from "@/components/FileUpload";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
+import ProfileUpload from "@/components/upload/ProfileUpload";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { DialogTitle } from "@radix-ui/react-dialog";
 import axios from "axios";
@@ -79,8 +79,7 @@ const ProfileImageModal = ({ children }: ProfileImageModalProps) => {
               render={({ field }) => (
                 <FormItem className="flex items-center justify-center">
                   <FormControl>
-                    <FileUpload
-                      endpoint="image"
+                    <ProfileUpload
                       onChange={field.onChange}
                       value={field.value}
                     />

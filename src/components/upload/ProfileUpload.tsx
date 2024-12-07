@@ -3,13 +3,12 @@ import { UploadButton } from "@uploadthing/react";
 import { X } from "lucide-react";
 import Image from "next/image";
 
-interface Props {
+interface ProfileUploadProps {
   onChange: (url?: string) => void;
   value: string;
-  endpoint: "image";
 }
 
-const FileUpload = ({ onChange, value, endpoint }: Props) => {
+const ProfileUpload = ({ onChange, value }: ProfileUploadProps) => {
   const fileType = value?.split(".").pop();
 
   if (value && fileType !== "pdf") {
@@ -34,7 +33,7 @@ const FileUpload = ({ onChange, value, endpoint }: Props) => {
 
   return (
     <UploadButton
-      endpoint={endpoint}
+      endpoint="image"
       onClientUploadComplete={(res) => {
         onChange(res?.[0].url);
       }}
@@ -45,4 +44,4 @@ const FileUpload = ({ onChange, value, endpoint }: Props) => {
   );
 };
 
-export default FileUpload;
+export default ProfileUpload;

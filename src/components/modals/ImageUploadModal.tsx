@@ -9,7 +9,6 @@ import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { z } from "zod";
 import Button from "../Button";
-import FileUpload from "../FileUpload";
 import {
   Dialog,
   DialogContent,
@@ -17,6 +16,7 @@ import {
   DialogTrigger,
 } from "../ui/dialog";
 import { Form, FormControl, FormField, FormItem } from "../ui/form";
+import FileUpload from "../upload/ProfileUpload";
 
 interface ImageUploadModalProps {
   children: React.ReactNode;
