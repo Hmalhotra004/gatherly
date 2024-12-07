@@ -1,8 +1,8 @@
 "use client";
 
 import useOtherUser from "@/hooks/useOtherUser";
+import { cn } from "@/lib/utils";
 import { FullConversationType } from "@/types";
-import clsx from "clsx";
 import { format } from "date-fns";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -53,7 +53,7 @@ const ConversationBox = ({ data, selected }: ConversationBoxProps) => {
 
   return (
     <div
-      className={clsx(
+      className={cn(
         `w-full relative flex items-center p-3 space-x-3 hover:bg-neutral-100 rounded-lg transition cursor-pointer bg-white`,
         selected && "bg-neutral-100"
       )}
@@ -77,7 +77,7 @@ const ConversationBox = ({ data, selected }: ConversationBoxProps) => {
             )}
           </div>
           <p
-            className={clsx(
+            className={cn(
               "truncate text-sm",
               hasSeen ? "text-gray-500" : "text-black font-medium"
             )}

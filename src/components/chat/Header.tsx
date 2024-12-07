@@ -51,6 +51,7 @@ const Header = ({ conversation }: HeaderProps) => {
               {statusText}
             </div>
           </div>
+          
         </div>
         <ProfileDrawer data={conversation}>
           <HiEllipsisHorizontal

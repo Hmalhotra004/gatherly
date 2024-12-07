@@ -20,11 +20,19 @@ const getFriendRequests = async () => {
 
     const friendRequests = await db.friend.findMany({
       where: {
-        user2Id: currentUser.id,
+        OR: [{ user1Id: currentUser.id }, { user2Id: currentUser.id }],
         status: "PENDING",
       },
       include: {
         user1: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            image: true,
+          },
+        },
+        user2: {
           select: {
             id: true,
             name: true,

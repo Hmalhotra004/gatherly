@@ -48,8 +48,6 @@ const LoginPage = () => {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
-    form.reset();
-
     signIn("credentials", {
       ...values,
       redirect: false,
@@ -59,6 +57,7 @@ const LoginPage = () => {
         if (callback?.ok && !callback?.error) {
           toast.success("Logged in");
           router.push("/");
+          form.reset();
         }
       })
       .finally(() => setIsLoading(false));

@@ -1,6 +1,6 @@
 "use client";
 
-import clsx from "clsx";
+import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { IconType } from "react-icons";
 
@@ -25,7 +25,7 @@ const MobileItem = ({
   return (
     <Link
       href={href}
-      className={clsx(
+      className={cn(
         `group flex gap-x-3 text-sm leading-6 w-full font-semibold justify-center p-4 text-gray-500 hover:text-black hover:bg-gray-100`,
         active && "text-black bg-gray-100"
       )}

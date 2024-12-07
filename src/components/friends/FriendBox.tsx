@@ -3,7 +3,7 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import Avatar from "../avatar/Avatar";
-import FriendModal from "./FriendModal";
+import FriendContext from "./FriendContext";
 interface FriendBoxProps {
   data: friend;
 }
@@ -27,7 +27,7 @@ const FriendBox = ({ data }: FriendBoxProps) => {
   }
 
   return (
-    <FriendModal friend={data}>
+    <FriendContext friend={data}>
       <div
         onClick={handleClick}
         className="w-full flex items-center space-x-3 bg-white p-3 hover:bg-neutral-100 rounded-lg transition cursor-pointer group"
@@ -37,7 +37,7 @@ const FriendBox = ({ data }: FriendBoxProps) => {
           <p className="text-sm font-medium text-gray-900">{data.name}</p>
         </div>
       </div>
-    </FriendModal>
+    </FriendContext>
   );
 };
 

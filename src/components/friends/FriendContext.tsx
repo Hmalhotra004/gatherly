@@ -9,12 +9,12 @@ import {
 import axios from "axios";
 import toast from "react-hot-toast";
 
-interface FriendModalProps {
+interface FriendContextProps {
   children: React.ReactNode;
   friend: friend;
 }
 
-const FriendModal = ({ children, friend }: FriendModalProps) => {
+const FriendContext = ({ children, friend }: FriendContextProps) => {
   async function handleRemove() {
     try {
       const response = await axios.delete("api/friends/", {
@@ -44,4 +44,4 @@ const FriendModal = ({ children, friend }: FriendModalProps) => {
   );
 };
 
-export default FriendModal;
+export default FriendContext;

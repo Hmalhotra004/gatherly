@@ -3,7 +3,7 @@ import useConversation from "@/hooks/useConversation";
 import { pusherClient } from "@/lib/pusher";
 import { friend, FullConversationType } from "@/types";
 
-import clsx from "clsx";
+import { cn } from "@/lib/utils";
 import { find } from "lodash";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -76,7 +76,7 @@ const ConversationList = ({ initialItems, users }: ConversationListProps) => {
 
   return (
     <aside
-      className={clsx(
+      className={cn(
         `fixed inset-y-0 pb-20 lg:pb-0 lg:left-20 lg:w-80 lg:block overflow-y-auto border-r border-gray-200`,
         isOpen ? "hidden" : "block w-full left-0"
       )}
@@ -86,6 +86,7 @@ const ConversationList = ({ initialItems, users }: ConversationListProps) => {
           <div className="text-2xl font-bold text-neutral-800">
             Conversations
           </div>
+
           <MakeGroupModal users={users}>
             <div className="rounded-full bg-gray-100 text-gray-600 cursor-pointer hover:opacity-75 transition p-2">
               <MdOutlineGroupAdd
@@ -95,6 +96,7 @@ const ConversationList = ({ initialItems, users }: ConversationListProps) => {
             </div>
           </MakeGroupModal>
         </div>
+
         {items.map((item) => (
           <ConversationBox
             key={item.id}
