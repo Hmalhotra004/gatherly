@@ -1,14 +1,13 @@
 "use client";
+import Avatar from "@/components/avatar/Avatar";
+import AvatarGroup from "@/components/avatar/AvatarGroup";
+import ProfileDrawer from "@/components/modals/ProfileDrawer";
 import useOtherUser from "@/hooks/useOtherUser";
 import useActiveList from "@/store/useActiveList";
 import { Conversation, User } from "@prisma/client";
 import Link from "next/link";
 import { useMemo } from "react";
 import { HiChevronLeft, HiEllipsisHorizontal } from "react-icons/hi2";
-import Avatar from "../Avatar";
-import AvatarGroup from "../AvatarGroup";
-import ProfileDrawer from "../ProfileDrawer";
-// import ProfileDrawer from "../ProfileDrawer";
 
 interface HeaderProps {
   conversation: Conversation & {
@@ -52,6 +51,7 @@ const Header = ({ conversation }: HeaderProps) => {
               {statusText}
             </div>
           </div>
+          
         </div>
         <ProfileDrawer data={conversation}>
           <HiEllipsisHorizontal

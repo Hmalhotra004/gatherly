@@ -3,12 +3,16 @@ import { cn } from "@/lib/utils";
 import { ControllerFieldState } from "react-hook-form";
 
 interface AuthInputProps {
-  id: string;
-  type: string;
+  id?: string;
+  type?: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  field: any;
-  disabled: boolean;
-  fieldState: ControllerFieldState;
+  field?: any;
+  disabled?: boolean;
+  fieldState?: ControllerFieldState;
+  placeholder?: string;
+  value?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  autoComplete?: string;
 }
 
 const AuthInput = ({
@@ -17,6 +21,10 @@ const AuthInput = ({
   field,
   disabled,
   fieldState,
+  placeholder,
+  value,
+  onChange,
+  autoComplete,
 }: AuthInputProps) => {
   return (
     <Input
@@ -29,7 +37,10 @@ const AuthInput = ({
       )}
       id={id}
       type={type}
-      autoComplete="off"
+      autoComplete={autoComplete ?? "off"}
+      placeholder={placeholder}
+      value={value}
+      onChange={onChange}
       {...field}
     />
   );

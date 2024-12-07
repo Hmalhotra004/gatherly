@@ -1,9 +1,9 @@
 "use client";
 import useConversation from "@/hooks/useConversation";
 import { pusherClient } from "@/lib/pusher";
-import { FullConversationType } from "@/types";
-import { User } from "@prisma/client";
-import clsx from "clsx";
+import { friend, FullConversationType } from "@/types";
+
+import { cn } from "@/lib/utils";
 import { find } from "lodash";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -14,7 +14,7 @@ import ConversationBox from "./ConversationBox";
 
 interface ConversationListProps {
   initialItems: FullConversationType[];
-  users: User[];
+  users: friend[];
 }
 
 const ConversationList = ({ initialItems, users }: ConversationListProps) => {
@@ -76,14 +76,17 @@ const ConversationList = ({ initialItems, users }: ConversationListProps) => {
 
   return (
     <aside
-      className={clsx(
+      className={cn(
         `fixed inset-y-0 pb-20 lg:pb-0 lg:left-20 lg:w-80 lg:block overflow-y-auto border-r border-gray-200`,
         isOpen ? "hidden" : "block w-full left-0"
       )}
     >
       <div className="px-5">
         <div className="flex justify-between mb-4 pt-4">
-          <div className="text-2xl font-bold text-neutral-800">Messages</div>
+          <div className="text-2xl font-bold text-neutral-800">
+            Conversations
+          </div>
+
           <MakeGroupModal users={users}>
             <div className="rounded-full bg-gray-100 text-gray-600 cursor-pointer hover:opacity-75 transition p-2">
               <MdOutlineGroupAdd
@@ -93,6 +96,7 @@ const ConversationList = ({ initialItems, users }: ConversationListProps) => {
             </div>
           </MakeGroupModal>
         </div>
+
         {items.map((item) => (
           <ConversationBox
             key={item.id}

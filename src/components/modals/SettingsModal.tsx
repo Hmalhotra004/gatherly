@@ -1,4 +1,13 @@
 "use client";
+import AuthInput from "@/components/auth/AuthInput";
+import { Button } from "@/components/ui/button";
+import { User } from "@prisma/client";
+import axios from "axios";
+import { Clipboard, Edit } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import toast from "react-hot-toast";
+
 import {
   Dialog,
   DialogContent,
@@ -7,64 +16,56 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { User } from "@prisma/client";
-import axios from "axios";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import toast from "react-hot-toast";
-import { z } from "zod";
-import AuthInput from "../auth/AuthInput";
-import AuthLabel from "../auth/AuthLabel";
-import Button from "../Button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-} from "../ui/form";
-import ProfileImageModal from "./ProfileImageModal";
 
 interface SettingsModalProps {
   currentUser: User;
   children: React.ReactNode;
 }
 
-const formSchema = z.object({
-  name: z
-    .string()
-    .min(1, "Name is required")
-    .max(50, "Name cannot be more than 50 characters"),
-  image: z.any(),
-});
-
 const SettingsModal = ({ currentUser, children }: SettingsModalProps) => {
   const [isLoading, setIsLoading] = useState(false);
+  const [isEditingName, setIsEditingName] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [name, setName] = useState(currentUser.name || "");
   const router = useRouter();
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      image: currentUser?.image || "",
-      name: currentUser?.name || "",
-    },
-  });
+  const username = `${currentUser.name}#${currentUser.discriminator}`;
 
-  const image = form.watch("image");
+  const handleModalClose = (isOpen: boolean) => {
+    setIsOpen(isOpen);
+    if (!isOpen) {
+      setName(currentUser.name || "");
+      setIsEditingName(false);
+    }
+  };
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
+  function handleCopy() {
+    navigator.clipboard.writeText(username);
+    toast.success("copied to clipboard");
+  }
+
+  async function onSubmit(e: React.FormEvent) {
+    e.preventDefault();
     setIsLoading(true);
+
     try {
-      const response = await axios.patch(`/api/settings`, values);
+      const updatedName = name.trim();
+      if (!updatedName) {
+        toast.error("Name cannot be empty");
+        return;
+      }
+
+      const response = await axios.patch(`/api/settings`, {
+        name: updatedName,
+      });
+
       if (response.status === 200) {
+        toast.success("Profile updated successfully!");
+        setIsEditingName(false);
         router.refresh();
       }
     } catch (err) {
-      console.log(err);
+      console.error(err);
       toast.error("Something went wrong");
     } finally {
       setIsLoading(false);
@@ -74,91 +75,56 @@ const SettingsModal = ({ currentUser, children }: SettingsModalProps) => {
   return (
     <Dialog
       open={isOpen}
-      onOpenChange={setIsOpen}
+      onOpenChange={handleModalClose}
     >
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent>
-        <div className="space-y-12">
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)}>
-              <div className="border-b border-gray-900/10 pb-12">
-                <DialogTitle className="">
-                  <DialogHeader className="text-gray-900">Profile</DialogHeader>
-                  <DialogDescription className="mt-1 text-gray-600">
-                    Edit your public information.
-                  </DialogDescription>
-                </DialogTitle>
-                <div className="mt-10 flex flex-col gap-y-8">
-                  <FormField
-                    control={form.control}
-                    name="name"
-                    render={({ field, fieldState }) => (
-                      <FormItem>
-                        <AuthLabel
-                          id="name"
-                          field={field}
-                          fieldState={fieldState}
-                        >
-                          Name
-                        </AuthLabel>
-                        <FormControl>
-                          <AuthInput
-                            field={field}
-                            fieldState={fieldState}
-                            disabled={isLoading}
-                            id="name"
-                            type="text"
-                          />
-                        </FormControl>
-                        <FormMessage>{fieldState.error?.message}</FormMessage>
-                      </FormItem>
-                    )}
-                  />
-                  <div>
-                    <label className="block text-sm font-medium leading-6 text-gray-900">
-                      Photo
-                    </label>
-                    <div className="mt-2 flex items-center gap-x-3">
-                      <Image
-                        alt="photo"
-                        width={48}
-                        height={48}
-                        className="rounded-full"
-                        src={image || currentUser?.image || "/placeholder.jpeg"}
-                      />
-
-                      <ProfileImageModal>
-                        <Button
-                          disabled={isLoading}
-                          secondary
-                          type="button"
-                        >
-                          Change
-                        </Button>
-                      </ProfileImageModal>
-                    </div>
+        <DialogHeader>
+          <DialogTitle className="text-gray-900">Profile</DialogTitle>
+          <DialogDescription className="mt-1 text-gray-600">
+            Edit your public information.
+          </DialogDescription>
+        </DialogHeader>
+        <div className="space-y-4">
+          <div className="space-y-1">
+            <p>Name:</p>
+            <div>
+              {!isEditingName ? (
+                <div className="flex items-center">
+                  <h2 className="font-semibold">{username}</h2>
+                  <div className="flex items-center gap-x-2 ml-auto">
+                    <Clipboard
+                      className="w-5 h-5 cursor-pointer hover:text-gray-500"
+                      onClick={handleCopy}
+                    />
+                    <Edit
+                      className="w-5 h-5 cursor-pointer hover:text-gray-500"
+                      onClick={() => setIsEditingName(true)}
+                    />
                   </div>
                 </div>
-              </div>
-              <div className="mt-6 flex items-center justify-end gap-x-6">
-                <Button
-                  disabled={isLoading}
-                  secondary
-                  type="button"
-                  onClick={() => setIsOpen(false)}
+              ) : (
+                <form
+                  onSubmit={onSubmit}
+                  className="flex gap-x-2"
                 >
-                  Cancel
-                </Button>
-                <Button
-                  disabled={isLoading}
-                  type="submit"
-                  // onClick={(e) => stopPropagation()}
-                >
-                  Save
-                </Button>
-              </div>
-            </form>
-          </Form>
+                  <AuthInput
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    disabled={isLoading}
+                  />
+                  <Button
+                    type="submit"
+                    variant="blue"
+                    className="ml-auto"
+                    disabled={isLoading}
+                  >
+                    Save
+                  </Button>
+                </form>
+              )}
+            </div>
+          </div>
         </div>
       </DialogContent>
     </Dialog>
