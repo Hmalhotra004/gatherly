@@ -1,0 +1,80 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             String    @id @default(uuid())
+  name           String?
+  email          String?   @unique
+  emailVerified  DateTime?
+  image          String?   @db.Text
+  hashedPassword String?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  discriminator  String?
+
+  conversations ConversationOnUser[]
+  seenMessages  Message[]            @relation("Seen")
+  friends1      Friend[]             @relation("User1")
+  friends2      Friend[]             @relation("User2")
+  messages      Message[]
+
+  @@unique([name, discriminator])
+}
+
+enum RequestType {
+  ACCEPTED
+  PENDING
+}
+
+model Friend {
+  id        String      @id @default(uuid())
+  user1Id   String
+  user2Id   String
+  status    RequestType
+  createdAt DateTime    @default(now())
+
+  user1 User @relation("User1", fields: [user1Id], references: [id], onDelete: Cascade)
+  user2 User @relation("User2", fields: [user2Id], references: [id], onDelete: Cascade)
+
+  @@unique([user1Id, user2Id])
+}
+
+model Conversation {
+  id            String               @id @default(uuid())
+  createdAt     DateTime             @default(now())
+  lastMessageAt DateTime             @default(now())
+  name          String?
+  isGroup       Boolean?
+  users         ConversationOnUser[]
+  messages      Message[]
+}
+
+model ConversationOnUser {
+  id             String   @id @default(uuid())
+  userId         String
+  conversationId String
+  joinedAt       DateTime @default(now())
+
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, conversationId])
+}
+
+model Message {
+  id             String       @id @default(uuid())
+  body           String?
+  image          String?
+  createdAt      DateTime     @default(now())
+  conversationId String
+  senderId       String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  sender         User         @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  seen           User[]       @relation("Seen")
+}
