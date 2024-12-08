@@ -1,10 +1,11 @@
+import Avatar from "@/components/avatar/Avatar";
 import { cn } from "@/lib/utils";
 import { FullMessageType } from "@/types";
 import { format } from "date-fns";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
-import Avatar from "../avatar/Avatar";
 import ImageModal from "../modals/ImageModal";
+import MessageContext from "./MessageContext";
 
 interface MessageBoxProps {
   isLast?: boolean;
@@ -29,7 +30,11 @@ const MessagesBox = ({ isLast, data }: MessageBoxProps) => {
   const message = cn(
     "text-sm w-fit overflow-hidden",
     isOwn ? "bg-sky-500 text-white" : "bg-gray-100",
-    data.image ? "rounded-md p-0" : "rounded-full py-2 px-3"
+    data.deleted
+      ? "rounded-full py-2 px-3 italic font-semibold"
+      : data.image
+      ? "rounded-md p-0"
+      : "rounded-full py-2 px-3"
   );
 
   return (
@@ -40,30 +45,37 @@ const MessagesBox = ({ isLast, data }: MessageBoxProps) => {
       <div className={body}>
         <div className="flex items-center gap-1">
           <div className="text-sm text-gray-500">{data.sender.name}</div>
-          <div className="text-xs text-gray-400">
-            {format(new Date(data.createdAt), "p")}
-          </div>
         </div>
-        <div className={message}>
-          {data.image && !data.deleted && (
-            <ImageModal src={data.image}>
-              <Image
-                alt="image"
-                width="200"
-                height="200"
-                src={data.image}
-                className="object-cover cursor-pointer hover:scale-110 transition translate"
-              />
-            </ImageModal>
+
+        <MessageContext
+          data={data}
+          isOwn={isOwn}
+        >
+          {!data.deleted ? (
+            <div className={message}>
+              {data.image && (
+                <ImageModal src={data.image}>
+                  <Image
+                    alt="image"
+                    width="200"
+                    height="200"
+                    src={data.image}
+                    className="object-cover cursor-pointer hover:scale-110 transition translate"
+                  />
+                </ImageModal>
+              )}
+              {data.body && <div>{data.body}</div>}
+            </div>
+          ) : (
+            <p className={message}>This message was deleted.</p>
           )}
-          {data.body && !data.deleted && <div>{data.body}</div>}
-          {data.deleted && (
-            <p className="italic font-semibold">This message was deleted.</p>
-          )}
+        </MessageContext>
+
+        <div className="text-[11px] font-light text-gray-500 -translate-y-1 flex items-center gap-x-2">
+          {data.body && data.edited && <p className="pb-[1px]">Edited</p>}
+          {format(new Date(data.createdAt), "p")}
         </div>
-        {data.body && data.edited && (
-          <p className="text-[10px] font-light text-gray-500">Edited</p>
-        )}
+
         {isLast && isOwn && seenList.length > 0 && (
           <div className="text-xs font-light text-gray-500">
             {`Seen by ${seenList}`}
