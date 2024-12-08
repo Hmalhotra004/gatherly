@@ -80,7 +80,15 @@ const ImageUploadModal = ({ children }: ImageUploadModalProps) => {
                 </FormItem>
               )}
             />
-            <div className="mt-4">
+            <div className="mt-4 flex w-full gap-x-2">
+              <Button
+                variant="destructive"
+                className="w-full"
+                onClick={() => form.resetField("imageUrl")}
+                type="button"
+              >
+                Discard
+              </Button>
               <Button
                 className="w-full"
                 variant="blue"

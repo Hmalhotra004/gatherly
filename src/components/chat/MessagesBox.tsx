@@ -45,7 +45,7 @@ const MessagesBox = ({ isLast, data }: MessageBoxProps) => {
           </div>
         </div>
         <div className={message}>
-          {data.image ? (
+          {data.image && !data.deleted && (
             <ImageModal src={data.image}>
               <Image
                 alt="image"
@@ -55,10 +55,15 @@ const MessagesBox = ({ isLast, data }: MessageBoxProps) => {
                 className="object-cover cursor-pointer hover:scale-110 transition translate"
               />
             </ImageModal>
-          ) : (
-            <div>{data.body}</div>
+          )}
+          {data.body && !data.deleted && <div>{data.body}</div>}
+          {data.deleted && (
+            <p className="italic font-semibold">This message was deleted.</p>
           )}
         </div>
+        {data.body && data.edited && (
+          <p className="text-[10px] font-light text-gray-500">Edited</p>
+        )}
         {isLast && isOwn && seenList.length > 0 && (
           <div className="text-xs font-light text-gray-500">
             {`Seen by ${seenList}`}

@@ -16,7 +16,7 @@ export type FullConversationType = Conversation & {
 export type UserWithFriendsAndFriendRequests = User & {
   friends: friend[];
   friendRequests: Friend[];
-}
+};
 
 export type friend = {
   id: string | null;
@@ -27,16 +27,16 @@ export type friend = {
 
 declare module "next-auth" {
   interface User extends DefaultUser {
-    discriminator?: string;
+    discriminator: string;
   }
 
   interface Session {
     user: {
       id: string;
-      name?: string;
-      email?: string;
+      name: string;
+      email: string;
       image?: string;
-      discriminator?: string;
+      discriminator: string;
     };
   }
 }
