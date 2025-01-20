@@ -43,13 +43,7 @@ const ConversationBox = ({ data, selected }: ConversationBoxProps) => {
     return seenArray.filter((user) => user.email === userEmail).length !== 0;
   }, [lastMessage, userEmail]);
 
-  const isDeleted = useMemo(() => {
-    if (lastMessage.deleted) return true;
-  }, [lastMessage]);
-
   const lastMessageText = useMemo(() => {
-    if (lastMessage?.deleted) return "This message was deleted";
-
     if (lastMessage?.image) return "Sent an image";
 
     if (lastMessage?.body) return lastMessage.body;
@@ -85,8 +79,7 @@ const ConversationBox = ({ data, selected }: ConversationBoxProps) => {
           <p
             className={cn(
               "truncate text-sm",
-              hasSeen ? "text-gray-500" : "text-black font-medium",
-              isDeleted && "italic"
+              hasSeen ? "text-gray-500" : "text-black font-medium"
             )}
           >
             {lastMessageText}

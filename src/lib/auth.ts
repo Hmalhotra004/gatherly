@@ -24,7 +24,7 @@ export const authOptions: NextAuthOptions = {
           },
         });
 
-        if (!user || !user.hashedPassword) {
+        if (!user || !user?.hashedPassword) {
           throw new Error("Invalid credentials");
         }
 
@@ -37,7 +37,10 @@ export const authOptions: NextAuthOptions = {
           throw new Error("Invalid credentials");
         }
 
-        return user;
+        return {
+          ...user,
+          discriminator: user.discriminator ?? undefined,
+        };
       },
     }),
   ],
