@@ -79,35 +79,3 @@ export async function POST(req: NextRequest) {
     return new NextResponse("Internal Error", { status: 500 });
   }
 }
-
-export async function DELETE(req: NextRequest) {
-  try {
-    const currentUser = await getCurrentUser();
-
-    if (!currentUser?.id || !currentUser?.email)
-      return new NextResponse("Unauthorized", { status: 401 });
-
-    const { id, conversationId } = await req.json();
-
-    const updatedMessage = await db.message.update({
-      where: {
-        id,
-        conversationId,
-      },
-      data: {
-        deleted: true,
-      },
-    });
-
-    await pusherServer.trigger(
-      conversationId,
-      "message:delete",
-      updatedMessage
-    );
-
-    return NextResponse.json(updatedMessage);
-  } catch (err) {
-    console.log(err, "ERROR_USER");
-    return new NextResponse("Internal Server Error", { status: 500 });
-  }
-}

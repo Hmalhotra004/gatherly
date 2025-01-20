@@ -17,7 +17,7 @@ interface FriendContextProps {
 const FriendContext = ({ children, friend }: FriendContextProps) => {
   async function handleRemove() {
     try {
-      const response = await axios.delete("/api/friends/", {
+      const response = await axios.delete("api/friends/", {
         data: {
           friendId: friend.id,
         },
