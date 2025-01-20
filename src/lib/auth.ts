@@ -37,10 +37,7 @@ export const authOptions: NextAuthOptions = {
           throw new Error("Invalid credentials");
         }
 
-        return {
-          ...user,
-          discriminator: user.discriminator ?? undefined,
-        };
+        return user;
       },
     }),
   ],

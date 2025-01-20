@@ -3,33 +3,26 @@ generator client {
 }
 
 datasource db {
-  provider = "mongodb"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
 model User {
-  id             String    @id @default(auto()) @map("_id") @db.ObjectId
-  name           String?
-  email          String?   @unique
+  id             String    @id @default(uuid())
+  name           String
+  email          String    @unique
   emailVerified  DateTime?
-  image          String?
-  hashedPassword String?
+  image          String?   @db.Text
+  hashedPassword String
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
+  discriminator  String
 
-  discriminator String?
-
-  conversationIds String[]       @db.ObjectId
-  conversations   Conversation[] @relation(fields: [conversationIds], references: [id])
-
-  seenMessageIds String[]  @db.ObjectId
-  seenMessages   Message[] @relation("Seen", fields: [seenMessageIds], references: [id])
-
-  friends1 Friend[] @relation("User1")
-  friends2 Friend[] @relation("User2")
-
-  accounts Account[]
-  messages Message[]
+  conversations ConversationOnUser[]
+  seenMessages  Message[]            @relation("Seen")
+  friends1      Friend[]             @relation("User1")
+  friends2      Friend[]             @relation("User2")
+  messages      Message[]
 
   @@unique([name, discriminator])
 }
@@ -40,9 +33,9 @@ enum RequestType {
 }
 
 model Friend {
-  id        String      @id @default(auto()) @map("_id") @db.ObjectId
-  user1Id   String      @db.ObjectId
-  user2Id   String      @db.ObjectId
+  id        String      @id @default(uuid())
+  user1Id   String
+  user2Id   String
   status    RequestType
   createdAt DateTime    @default(now())
 
@@ -52,51 +45,37 @@ model Friend {
   @@unique([user1Id, user2Id])
 }
 
-model Account {
-  id                String  @id @default(auto()) @map("_id") @db.ObjectId
-  userId            String  @db.ObjectId
-  type              String
-  provider          String
-  providerAccountId String
-  refresh_token     String? @db.String
-  access_token      String? @db.String
-  expires_at        Int?
-  token_type        String?
-  scope             String?
-  id_token          String? @db.String
-  session_state     String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([provider, providerAccountId])
-}
-
 model Conversation {
-  id            String   @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt     DateTime @default(now())
-  lastMessageAt DateTime @default(now())
+  id            String               @id @default(uuid())
+  createdAt     DateTime             @default(now())
+  lastMessageAt DateTime             @default(now())
   name          String?
   isGroup       Boolean?
+  users         ConversationOnUser[]
+  messages      Message[]
+}
 
-  messagesIds String[]  @db.ObjectId
-  messages    Message[]
+model ConversationOnUser {
+  id             String   @id @default(uuid())
+  userId         String
+  conversationId String
+  isAdmin        Boolean
+  joinedAt       DateTime @default(now())
 
-  userIds String[] @db.ObjectId
-  users   User[]   @relation(fields: [userIds], references: [id])
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, conversationId])
 }
 
 model Message {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  body      String?
-  image     String?
-  createdAt DateTime @default(now())
-
-  seenIds String[] @db.ObjectId
-  seen    User[]   @relation("Seen", fields: [seenIds], references: [id])
-
-  conversationId String       @db.ObjectId
+  id             String       @id @default(uuid())
+  body           String?
+  image          String?
+  createdAt      DateTime     @default(now())
+  conversationId String
+  senderId       String
   conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
-
-  senderId String @db.ObjectId
-  sender   User   @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  sender         User         @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  seen           User[]       @relation("Seen")
 }

@@ -23,4 +23,4 @@ async function getUniqueDiscriminator(name: string) {
   return code;
 }
 
-export default getUniqueDiscriminator
+export default getUniqueDiscriminator;

@@ -1,5 +1,4 @@
 import { Conversation, Friend, Message, User } from "@prisma/client";
-import { DefaultUser } from "next-auth";
 
 export type Variant = "LOGIN" | "REGISTER";
 
@@ -16,7 +15,7 @@ export type FullConversationType = Conversation & {
 export type UserWithFriendsAndFriendRequests = User & {
   friends: friend[];
   friendRequests: Friend[];
-}
+};
 
 export type friend = {
   id: string | null;
@@ -25,18 +24,18 @@ export type friend = {
   image: string | null;
 };
 
-declare module "next-auth" {
-  interface User extends DefaultUser {
-    discriminator?: string;
-  }
+// declare module "next-auth" {
+//   interface User extends DefaultUser {
+//     discriminator: string;
+//   }
 
-  interface Session {
-    user: {
-      id: string;
-      name?: string;
-      email?: string;
-      image?: string;
-      discriminator?: string;
-    };
-  }
-}
+//   interface Session {
+//     user: {
+//       id: string;
+//       name: string;
+//       email: string;
+//       image?: string;
+//       discriminator: string;
+//     };
+//   }
+// }

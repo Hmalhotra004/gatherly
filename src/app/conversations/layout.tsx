@@ -1,6 +1,3 @@
-import getConversations from "@/actions/getConversations";
-import getFriends from "@/actions/getFriends";
-import ConversationList from "@/components/conversations/ConversationList";
 import Sidebar from "@/components/sidebar/Sidebar";
 
 export default async function ConversationsLayout({
@@ -8,15 +5,15 @@ export default async function ConversationsLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const conversations = await getConversations();
-  const userFriends = await getFriends();
+  // const conversations = await getConversations();
+  // const userFriends = await getFriends();
   return (
     <Sidebar>
       <div className="h-full">
-        <ConversationList
+        {/* <ConversationList
           initialItems={conversations}
           users={userFriends}
-        />
+        /> */}
         {children}
       </div>
     </Sidebar>
