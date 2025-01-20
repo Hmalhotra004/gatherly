@@ -23,19 +23,3 @@ export type friend = {
   email: string | null;
   image: string | null;
 };
-
-// declare module "next-auth" {
-//   interface User extends DefaultUser {
-//     discriminator: string;
-//   }
-
-//   interface Session {
-//     user: {
-//       id: string;
-//       name: string;
-//       email: string;
-//       image?: string;
-//       discriminator: string;
-//     };
-//   }
-// }
