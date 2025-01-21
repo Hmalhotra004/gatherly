@@ -7,8 +7,8 @@ import { format } from "date-fns";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useCallback, useMemo } from "react";
-import Avatar from "../avatar/Avatar";
 import AvatarGroup from "../avatar/AvatarGroup";
+import Avatar from "../avatar/Avatar";
 
 interface ConversationBoxProps {
   data: FullConversationType;
@@ -59,16 +59,17 @@ const ConversationBox = ({ data, selected }: ConversationBoxProps) => {
       )}
       onClick={handleClick}
     >
-      {data.isGroup ? (
+      {/* //TODO fix later */}
+      {/* {data.isGroup ? (
         <AvatarGroup users={data.users} />
       ) : (
         <Avatar user={otherUser} />
-      )}
+      )} */}
       <div className="min-w-0 flex-1">
         <div className="focus:outline-none">
           <div className="flex justify-between items-center mb-1">
             <p className="text-md font-medium text-gray-900">
-              {data.name || otherUser.name}
+              {/* {data.name || otherUser.name} */}
             </p>
             {lastMessage?.createdAt && (
               <p className="text-xs text-gray-400 font-light">

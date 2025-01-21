@@ -1,4 +1,4 @@
-import { Conversation, Friend, Message, User } from "@prisma/client";
+import { Conversation, ConversationOnUser, Friend, Message, User } from "@prisma/client";
 
 export type Variant = "LOGIN" | "REGISTER";
 
@@ -8,7 +8,7 @@ export type FullMessageType = Message & {
 };
 
 export type FullConversationType = Conversation & {
-  users: User[];
+  users: ConversationOnUser[];
   messages: FullMessageType[];
 };
 

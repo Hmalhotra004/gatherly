@@ -62,37 +62,46 @@ export async function POST(req: NextRequest) {
   try {
     const currentUser = await getCurrentUser();
 
-    if (!currentUser?.id || !currentUser?.email)
+    if (!currentUser?.id || !currentUser?.email) {
       return new NextResponse("Unauthorized", { status: 401 });
+    }
 
     const body = await req.json();
     const { userId, isGroup, members, name } = body;
 
-    if (isGroup && (!members || members.length < 2 || !name))
+    if (isGroup && (!members || members.length < 2 || !name)) {
       return new NextResponse("Invalid Data", { status: 400 });
+    }
 
+    //TODO Check if working for gruop chat later
     if (isGroup) {
       const newConversation = await db.conversation.create({
         data: {
           name,
-          isGroup,
+          isGroup: true,
           users: {
-            connect: [
-              ...members.map((member: { value: string }) => ({
-                id: member.value,
+            create: [
+              ...members.map((member) => ({
+                user: { connect: { id: member.value } },
+                isAdmin: false,
               })),
               {
-                id: currentUser.id,
+                user: { connect: { id: currentUser.id } },
+                isAdmin: true, // Make the creator an admin
               },
             ],
           },
         },
         include: {
-          users: true,
+          users: {
+            include: {
+              user: true,
+            },
+          },
         },
       });
 
-      newConversation.users.forEach((user) => {
+      newConversation.users.forEach(({ user }) => {
         if (user.email) {
           pusherServer.trigger(user.email, "conversation:new", newConversation);
         }
@@ -101,38 +110,41 @@ export async function POST(req: NextRequest) {
       return NextResponse.json(newConversation);
     }
 
-    const existingConversations = await db.conversation.findMany({
+    const existingConversation = await db.conversation.findFirst({
       where: {
-        OR: [
-          {
-            userIds: {
-              equals: [currentUser.id, userId],
-            },
+        isGroup: false,
+        users: {
+          every: {
+            OR: [{ userId: currentUser.id }, { userId: userId }],
           },
-          {
-            userIds: {
-              equals: [userId, currentUser.id],
-            },
-          },
-        ],
+        },
       },
     });
 
-    const singleConversation = existingConversations[0];
-    if (singleConversation) return NextResponse.json(singleConversation);
+    if (existingConversation) {
+      return NextResponse.json(existingConversation);
+    }
 
     const newConversation = await db.conversation.create({
       data: {
+        isGroup: false,
         users: {
-          connect: [{ id: currentUser.id }, { id: userId }],
+          create: [
+            { user: { connect: { id: currentUser.id } }, isAdmin: false },
+            { user: { connect: { id: userId } }, isAdmin: false },
+          ],
         },
       },
       include: {
-        users: true,
+        users: {
+          include: {
+            user: true,
+          },
+        },
       },
     });
 
-    newConversation.users.map((user) => {
+    newConversation.users.forEach(({ user }) => {
       if (user.email) {
         pusherServer.trigger(user.email, "conversation:new", newConversation);
       }
