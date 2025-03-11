@@ -44,6 +44,7 @@ export const authOptions: NextAuthOptions = {
   pages: {
     signIn: "/log-in",
     newUser: "/sign-up",
+    verifyRequest: "/verify",
   },
   debug: process.env.NODE_ENV !== "development",
   session: {

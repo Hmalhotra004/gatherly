@@ -1,5 +1,30 @@
+"use client";
+
+import Loading from "@/components/fallbacks/Loading";
+import { User } from "@prisma/client";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+
 const HomePage = () => {
-  return <div>HomePage</div>;
+  const router = useRouter();
+
+  const { data: user } = useQuery<User>({
+    queryKey: ["userData"],
+    queryFn: async () => {
+      const response = await axios.get("/api/getcurrentuser");
+      return response.data;
+    },
+  });
+
+  useEffect(() => {
+    if (!user) {
+      router.replace("/log-in");
+    }
+  }, [user, router]);
+
+  return <Loading />;
 };
 
 export default HomePage;
