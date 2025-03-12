@@ -1,6 +1,6 @@
-"use client";
-
 import EmptyState from "@/components/EmptyState";
+
+export const dynamic = "force-dynamic";
 
 const page = () => {
   return (
