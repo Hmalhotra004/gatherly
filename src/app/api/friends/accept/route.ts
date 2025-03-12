@@ -20,8 +20,8 @@ export async function PUT(req: NextRequest) {
 
     const existingRequest = await db.friend.findFirst({
       where: {
-        user1Id: friendId,
-        user2Id: currentUser.id,
+        user1Id: currentUser.id,
+        user2Id: friendId,
         status: "PENDING",
       },
     });
@@ -33,21 +33,31 @@ export async function PUT(req: NextRequest) {
     const newFriend = await db.friend.update({
       where: {
         user1Id_user2Id: {
-          user1Id: friendId,
-          user2Id: currentUser.id,
+          user1Id: currentUser.id,
+          user2Id: friendId,
         },
       },
       data: { status: "ACCEPTED" },
       include: { user1: true, user2: true },
     });
 
-    const frds = [newFriend.user1, newFriend.user2];
+    await pusherServer.trigger(
+      currentUser.id,
+      "request:accepted",
+      newFriend.user2
+    );
 
-    frds.map((frd) => {
-      if (frd.id) {
-        pusherServer.trigger(frd.id, "request:accepted", newFriend);
-      }
-    });
+    await pusherServer.trigger(
+      currentUser.id,
+      "request:declined",
+      newFriend.user2Id
+    );
+
+    await pusherServer.trigger(
+      newFriend.user2Id,
+      "request:accepted",
+      currentUser
+    );
 
     return NextResponse.json(newFriend);
   } catch (e) {

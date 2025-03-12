@@ -39,7 +39,7 @@ const FriendRequestModal = ({ children, friends }: FriendRequestModalProps) => {
 
   async function handleDecline(friend: friend) {
     try {
-      const response = await axios.put("api/friends/decline", {
+      const response = await axios.put("/api/friends/decline", {
         friendId: friend.id,
       });
       if (response.status === 200) {

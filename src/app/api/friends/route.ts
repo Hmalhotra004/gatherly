@@ -112,8 +112,8 @@ export async function POST(req: NextRequest) {
 
     const newFriend = await db.friend.create({
       data: {
-        user2Id: UserFriendRequest.id,
-        user1Id: currentUser.id,
+        user1Id: UserFriendRequest.id,
+        user2Id: currentUser.id,
         status: "PENDING",
       },
     });
@@ -121,7 +121,7 @@ export async function POST(req: NextRequest) {
     await pusherServer.trigger(
       UserFriendRequest.id,
       "request:pending",
-      newFriend
+      currentUser
     );
 
     return NextResponse.json(newFriend);
