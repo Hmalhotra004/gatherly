@@ -1,37 +1,58 @@
+import { cookies } from "next/headers"; // Next.js App Router API
 import { createUploadthing, type FileRouter } from "uploadthing/next";
 import { UploadThingError } from "uploadthing/server";
 
 const f = createUploadthing();
 
-const auth = (req: Request) => ({ id: "fakeId" }); // Fake auth function
+const auth = async () => {
+  const cookieStore = cookies();
+  const userId = (await cookieStore).get("userId")?.value;
+
+  if (!userId) throw new UploadThingError("Unauthorized");
+
+  return { id: userId };
+};
 
 // FileRouter for your app, can contain multiple FileRoutes
 export const ourFileRouter = {
-  imageUploader: f({
+  profileImg: f({
     image: {
       maxFileSize: "4MB",
       maxFileCount: 1,
     },
   })
-    // Set permissions and file types for this FileRoute
-    .middleware(async ({ req }) => {
-      // This code runs on your server before upload
-      const user = await auth(req);
-
-      // If you throw, the user will not be able to upload
-      if (!user) throw new UploadThingError("Unauthorized");
-
-      // Whatever is returned here is accessible in onUploadComplete as `metadata`
-      return { userId: user.id };
+    .middleware(async () => {
+      const user = await auth(); // Authenticate user using cookies
+      return { userId: user.id }; // Pass userId to metadata
     })
     .onUploadComplete(async ({ metadata, file }) => {
-      // This code RUNS ON YOUR SERVER after upload
       console.log("Upload complete for userId:", metadata.userId);
+      console.log("File URL:", file.ufsUrl);
+      return { uploadedBy: metadata.userId, fileUrl: file.ufsUrl };
+    }),
 
-      console.log("file url", file.ufsUrl);
-
-      // !!! Whatever is returned here is sent to the clientside `onClientUploadComplete` callback
-      return { uploadedBy: metadata.userId };
+  attchment: f({
+    image: {
+      maxFileSize: "4MB",
+      maxFileCount: 1,
+    },
+    pdf: {
+      maxFileSize: "4MB",
+      maxFileCount: 1,
+    },
+    "text/plain": {
+      maxFileSize: "4MB",
+      maxFileCount: 1,
+    },
+  })
+    .middleware(async () => {
+      const user = await auth(); // Authenticate user using cookies
+      return { userId: user.id }; // Pass userId to metadata
+    })
+    .onUploadComplete(async ({ metadata, file }) => {
+      console.log("Upload complete for userId:", metadata.userId);
+      console.log("File URL:", file.ufsUrl);
+      return { uploadedBy: metadata.userId, fileUrl: file.ufsUrl };
     }),
 } satisfies FileRouter;
 

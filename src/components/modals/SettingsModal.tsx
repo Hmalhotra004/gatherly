@@ -102,6 +102,7 @@ const SettingsModal = ({ currentUser, children }: SettingsModalProps) => {
       });
       if (response.status === 200) {
         router.refresh();
+        toast.success("Upload Success");
       }
     } catch (err) {
       console.log(err);
@@ -186,30 +187,26 @@ const SettingsModal = ({ currentUser, children }: SettingsModalProps) => {
                 {currentUser?.image && (
                   <button
                     onClick={removeImage}
-                    className="bg-rose-500 text-white p-1 rounded-full absolute top-0 right-0 shadow-sm"
+                    className="bg-rose-500 text-white p-1 rounded-full absolute top-0 right-0 shadow-sm cursor-pointer"
                     type="button"
                   >
                     <X className="h-3 w-3" />
                   </button>
                 )}
               </div>
+
               <UploadButton
-                endpoint="imageUploader"
+                endpoint="profileImg"
                 onClientUploadComplete={(res) => {
                   imageChange(res?.[0].ufsUrl);
-                  // onChange(res?.[0].ufsUrl);
-                  toast.success("Upload Success");
                 }}
                 onUploadError={(error: Error) => {
                   console.error(error);
                   toast.error("Something went wrong");
                 }}
-                // className="mt-6"
                 config={{ cn: twMerge }}
+                className="ut-allowed-content:hidden ut-button:bg-transparent ut-button:text-black ut-button:hover:bg-gray-100 ut-button:transition"
               />
-              {/* <ProfileImageModal>
-                <Button variant="ghost">Change</Button>
-              </ProfileImageModal> */}
             </main>
           </div>
         </div>
