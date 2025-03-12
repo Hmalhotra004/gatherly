@@ -43,7 +43,9 @@ const getFriendRequests = async () => {
       },
     });
 
-    const requests = friendRequests.map((request) => request.user1);
+    const requests = friendRequests.map((request) =>
+      request.user1.id === currentUser.id ? request.user2 : request.user1
+    );
 
     return requests;
   } catch (e) {
