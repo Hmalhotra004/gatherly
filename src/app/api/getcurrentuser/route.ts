@@ -21,7 +21,7 @@ export async function GET() {
     if (!currentUser.discriminator || !currentUser.id || !currentUser.email)
       return new NextResponse("Missing Info", { status: 404 });
 
-    return currentUser;
+    return NextResponse.json(currentUser);
   } catch (err) {
     console.error(err);
     return new NextResponse("error getting user", { status: 500 });

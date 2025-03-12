@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { z } from "zod";
@@ -18,6 +18,7 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
+import { Loader2 } from "lucide-react";
 import Link from "next/link";
 
 const formSchema = z.object({
@@ -30,11 +31,12 @@ const formSchema = z.object({
 });
 
 const LoginPage = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const session = useSession();
   const router = useRouter();
 
   useEffect(() => {
-    if (session?.status === "authenticated") router.push("/");
+    if (session?.status === "authenticated") router.replace("/");
   }, [session, router]);
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -46,20 +48,23 @@ const LoginPage = () => {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    setIsLoading(true);
     signIn("credentials", {
       ...values,
       redirect: false,
-    }).then((callback) => {
-      if (callback?.error) toast.error("Invaild credentials");
-      if (callback?.ok && !callback?.error) {
-        toast.success("Logged in");
-        router.push("/");
-        form.reset();
-      }
-    });
+    })
+      .then((callback) => {
+        if (callback?.error) toast.error("Invaild credentials");
+        if (callback?.ok && !callback?.error) {
+          toast.success("Logged in");
+          router.push("/");
+          form.reset();
+        }
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   }
-
-  const isLoading = form.formState.isLoading;
 
   return (
     <div className="flex flex-col justify-center pb-12 pt-4 sm:px-6 lg:px-8 h-full">
@@ -126,6 +131,7 @@ const LoginPage = () => {
                       <Button
                         variant="link"
                         type="button"
+                        disabled={isLoading}
                         className="text-black mr-auto -translate-x-4 -translate-y-2 cursor-pointer"
                         onClick={() => router.push("/forgot-password")}
                       >
@@ -145,7 +151,7 @@ const LoginPage = () => {
                   type="submit"
                   className="w-full"
                 >
-                  Log in
+                  {isLoading ? <Loader2 className="animate-spin" /> : "Log in"}
                 </Button>
               </form>
             </Form>
