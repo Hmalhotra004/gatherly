@@ -21,6 +21,8 @@ const HomePage = () => {
   useEffect(() => {
     if (!user) {
       router.replace("/log-in");
+    } else {
+      router.replace("/friends");
     }
   }, [user, router]);
 
