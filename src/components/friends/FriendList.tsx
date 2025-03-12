@@ -48,14 +48,22 @@ const FriendList = ({
       );
     };
 
+    const handleDecline = (declinedByUserId: string) => {
+      setFriendReqs((current) =>
+        current.filter((req) => req.id !== declinedByUserId)
+      );
+    };
+
     pusherClient.bind("request:pending", handleRequest);
     pusherClient.bind("request:accepted", handleAccept);
     pusherClient.bind("request:removed", handleRemove);
+    pusherClient.bind("request:declined", handleDecline);
 
     return () => {
       pusherClient.unbind("request:pending", handleRequest);
       pusherClient.unbind("request:accepted", handleAccept);
       pusherClient.unbind("request:removed", handleRemove);
+      pusherClient.unbind("request:declined", handleDecline);
       pusherClient.unsubscribe(currentUser.id);
     };
   }, [currentUser.id]);

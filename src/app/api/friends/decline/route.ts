@@ -1,5 +1,6 @@
 import getCurrentUser from "@/actions/getCurrentUser";
 import db from "@/lib/db";
+import { pusherServer } from "@/lib/pusher";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function PUT(req: NextRequest) {
@@ -45,6 +46,8 @@ export async function PUT(req: NextRequest) {
         },
       },
     });
+
+    await pusherServer.trigger(currentUser.id, "request:declined", friendId);
 
     return NextResponse.json(newFriend);
   } catch (e) {
