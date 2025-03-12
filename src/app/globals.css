@@ -1,8 +1,18 @@
 @import "tailwindcss";
+@import "uploadthing/tw/v4";
 
 @plugin "tailwindcss-animate";
+@plugin "@tailwindcss/forms";
+@plugin "tailwindcss-debug-screens";
+@source "../../node_modules/@uploadthing/react/dist";
 
 @custom-variant dark (&:is(.dark *));
+
+/* @theme {
+  --breakpoint-xs: 30rem;
+  --breakpoint-2xl: 100rem;
+  --breakpoint-3xl: 120rem;
+} */
 
 @theme inline {
   --color-background: var(--background);
