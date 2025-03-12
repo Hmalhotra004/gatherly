@@ -4,6 +4,7 @@ import ActionTooltip from "@/components/ActionTootip";
 import Avatar from "@/components/avatar/Avatar";
 import useRoutes from "@/hooks/useRoutes";
 import { User } from "@prisma/client";
+import SettingsModal from "../modals/SettingsModal";
 import DesktopItem from "./DesktopItem";
 
 interface DestopSidebarProps {
@@ -46,19 +47,19 @@ const DesktopSidebar = ({ currentUser }: DestopSidebarProps) => {
             <ModeToggle />
           </div>
         </ActionTooltip> */}
-        {/* <SettingsModal currentUser={currentUser}> */}
-        <div>
-          <ActionTooltip
-            label="Profile"
-            side="right"
-            align="center"
-          >
-            <div className="cursor-pointer hover:opacity-75 transition">
-              <Avatar user={currentUser} />
-            </div>
-          </ActionTooltip>
-        </div>
-        {/* </SettingsModal> */}
+        <SettingsModal currentUser={currentUser}>
+          <div>
+            <ActionTooltip
+              label="Profile"
+              side="right"
+              align="center"
+            >
+              <div className="cursor-pointer hover:opacity-75 transition">
+                <Avatar user={currentUser} />
+              </div>
+            </ActionTooltip>
+          </div>
+        </SettingsModal>
       </nav>
     </section>
   );

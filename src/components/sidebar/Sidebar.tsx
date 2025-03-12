@@ -1,16 +1,13 @@
-"use client";
-import { useGetCurrentUser } from "@/lib/fetch";
+import getCurrentUser from "@/actions/getCurrentUser";
 import DesktopSidebar from "./DesktopSidebar";
 import MobileFooter from "./MobileFooter";
 
-const Sidebar = () => {
-  const data = useGetCurrentUser();
-
-  const user = data.data;
+const Sidebar = async () => {
+  const currentUser = await getCurrentUser();
 
   return (
     <div className="h-full">
-      <DesktopSidebar currentUser={user!} />
+      <DesktopSidebar currentUser={currentUser!} />
       <MobileFooter />
     </div>
   );
