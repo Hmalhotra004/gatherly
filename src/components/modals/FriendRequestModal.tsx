@@ -24,7 +24,7 @@ const FriendRequestModal = ({ children, friends }: FriendRequestModalProps) => {
 
   async function handleAccept(friend: friend) {
     try {
-      const response = await axios.put("api/friends/accept", {
+      const response = await axios.put("/api/friends/accept", {
         friendId: friend.id,
       });
       if (response.status === 200) {

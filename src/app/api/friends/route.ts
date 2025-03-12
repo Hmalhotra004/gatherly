@@ -50,6 +50,9 @@ export async function DELETE(req: NextRequest) {
       },
     });
 
+    await pusherServer.trigger(friendId, "request:removed", currentUser.id);
+    await pusherServer.trigger(currentUser.id, "request:removed", friendId);
+
     return NextResponse.json(friend);
   } catch (e) {
     console.error(e, "ADD_FRIEND_ERROR");

@@ -24,31 +24,39 @@ const FriendList = ({
   useEffect(() => {
     pusherClient.subscribe(currentUser.id);
 
-    async function handleRequest(newReq: friend) {
+    const handleRequest = (newReq: friend) => {
       setFriendReqs((current) => {
         if (current.some((req) => req.id === newReq.id)) {
           return current;
         }
         return [newReq, ...current];
       });
-    }
+    };
 
-    async function handleAccept(newFrd: friend) {
+    const handleAccept = (newFrd: friend) => {
       setFriendState((current) => {
         if (current.some((frd) => frd.id === newFrd.id)) {
           return current;
         }
         return [newFrd, ...current];
       });
-    }
+    };
+
+    const handleRemove = (removedFriendId: string) => {
+      setFriendState((current) =>
+        current.filter((frd) => frd.id !== removedFriendId)
+      );
+    };
 
     pusherClient.bind("request:pending", handleRequest);
     pusherClient.bind("request:accepted", handleAccept);
+    pusherClient.bind("request:removed", handleRemove);
 
     return () => {
-      pusherClient.unsubscribe(currentUser.id);
       pusherClient.unbind("request:pending", handleRequest);
       pusherClient.unbind("request:accepted", handleAccept);
+      pusherClient.unbind("request:removed", handleRemove);
+      pusherClient.unsubscribe(currentUser.id);
     };
   }, [currentUser.id]);
 
