@@ -16,9 +16,10 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { UploadButton } from "@/utils/uploadthing";
 import Image from "next/image";
+import { twMerge } from "tailwind-merge";
 import DeleteAccountAlert from "./DeleteAccountAlert";
-import ProfileImageModal from "./ProfileImageModal";
 
 interface SettingsModalProps {
   currentUser: User;
@@ -87,6 +88,23 @@ const SettingsModal = ({ currentUser, children }: SettingsModalProps) => {
       }
     } catch (err) {
       console.error(err);
+      toast.error("Something went wrong");
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  async function imageChange(url: string) {
+    setIsLoading(true);
+    try {
+      const response = await axios.put(`/api/settings/image`, {
+        image: url,
+      });
+      if (response.status === 200) {
+        router.refresh();
+      }
+    } catch (err) {
+      console.log(err);
       toast.error("Something went wrong");
     } finally {
       setIsLoading(false);
@@ -175,9 +193,23 @@ const SettingsModal = ({ currentUser, children }: SettingsModalProps) => {
                   </button>
                 )}
               </div>
-              <ProfileImageModal>
+              <UploadButton
+                endpoint="imageUploader"
+                onClientUploadComplete={(res) => {
+                  imageChange(res?.[0].ufsUrl);
+                  // onChange(res?.[0].ufsUrl);
+                  toast.success("Upload Success");
+                }}
+                onUploadError={(error: Error) => {
+                  console.error(error);
+                  toast.error("Something went wrong");
+                }}
+                // className="mt-6"
+                config={{ cn: twMerge }}
+              />
+              {/* <ProfileImageModal>
                 <Button variant="ghost">Change</Button>
-              </ProfileImageModal>
+              </ProfileImageModal> */}
             </main>
           </div>
         </div>

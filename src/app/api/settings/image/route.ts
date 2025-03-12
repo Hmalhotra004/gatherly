@@ -3,7 +3,7 @@ import getCurrentUser from "@/actions/getCurrentUser";
 import db from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function PATCH(req: NextRequest) {
+export async function PUT(req: NextRequest) {
   try {
     const currentUser = await getCurrentUser();
 
