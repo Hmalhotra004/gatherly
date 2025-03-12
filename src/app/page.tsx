@@ -1,9 +1,7 @@
 "use client";
 
 import Loading from "@/components/fallbacks/Loading";
-import { User } from "@prisma/client";
-import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
+import { useGetCurrentUser } from "@/lib/fetch";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
@@ -11,13 +9,11 @@ import { useEffect } from "react";
 const HomePage = () => {
   const router = useRouter();
 
-  const { data: user, isLoading } = useQuery<User>({
-    queryKey: ["userData"],
-    queryFn: async () => {
-      const response = await axios.get("/api/getcurrentuser");
-      return response.data;
-    },
-  });
+  const data = useGetCurrentUser();
+
+  const isLoading = data.isLoading;
+
+  const user = data.data;
 
   useEffect(() => {
     if (isLoading) return;

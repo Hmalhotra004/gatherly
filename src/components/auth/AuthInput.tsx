@@ -3,11 +3,11 @@ import { cn } from "@/lib/utils";
 import { ControllerFieldState, FieldValues } from "react-hook-form";
 
 interface AuthInputProps {
-  id: string;
-  type: string;
-  field: FieldValues;
-  disabled: boolean;
-  fieldState: ControllerFieldState;
+  id?: string;
+  type?: string;
+  field?: FieldValues;
+  disabled?: boolean;
+  fieldState?: ControllerFieldState;
   placeholder?: string;
   value?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
