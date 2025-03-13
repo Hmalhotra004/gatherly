@@ -3,7 +3,7 @@
 
 @plugin "tailwindcss-animate";
 @plugin "@tailwindcss/forms";
-@plugin "tailwindcss-debug-screens";
+/* @plugin "tailwindcss-debug-screens"; */
 @source "../../node_modules/@uploadthing/react/dist";
 
 @custom-variant dark (&:is(.dark *));
