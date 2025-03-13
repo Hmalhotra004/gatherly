@@ -4,8 +4,8 @@ import useConversation from "@/hooks/useConversation";
 import { pusherClient } from "@/lib/pusher";
 import { cn } from "@/lib/utils";
 import { friend, FullConversationType } from "@/types";
+import Cookies from "js-cookie";
 import { find } from "lodash";
-import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { MdOutlineGroupAdd } from "react-icons/md";
@@ -18,13 +18,13 @@ interface ConversationListProps {
 
 const ConversationList = ({ initialItems, users }: ConversationListProps) => {
   const [items, setItems] = useState(initialItems);
-  const session = useSession();
   const router = useRouter();
+  // const userId = Cookies.get("userId");
   const { conversationId, isOpen } = useConversation();
 
   const pusherKey = useMemo(() => {
-    return session.data?.user?.email;
-  }, [session.data?.user?.email]);
+    return Cookies.get("userId");
+  }, []);
 
   useEffect(() => {
     if (!pusherKey) return;

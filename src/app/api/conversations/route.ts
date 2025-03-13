@@ -32,24 +32,28 @@ export async function DELETE(req: NextRequest) {
       return new NextResponse("Invalid Id", { status: 400 });
     }
 
-    const deletedConversation = await db.conversation.deleteMany({
+    const deletedConversation = await db.conversationOnUser.deleteMany({
       where: {
         id: conversationId,
-        userIds: {
-          hasSome: [currentUser.id],
-        },
+        userId: currentUser.id,
       },
     });
 
-    existingConversation.users.forEach((user) => {
-      if (user.email) {
-        pusherServer.trigger(
-          user.email,
-          "conversation:remove",
-          existingConversation
-        );
-      }
-    });
+    pusherServer.trigger(
+      currentUser.id,
+      "conversation:remove",
+      existingConversation
+    );
+
+    // existingConversation.users.forEach((user) => {
+    //   if (user.email) {
+    //     pusherServer.trigger(
+    //       user.email,
+    //       "conversation:remove",
+    //       existingConversation
+    //     );
+    //   }
+    // });
 
     return NextResponse.json(deletedConversation);
   } catch (err) {
@@ -73,7 +77,6 @@ export async function POST(req: NextRequest) {
       return new NextResponse("Invalid Data", { status: 400 });
     }
 
-    //TODO Check if working for gruop chat later
     if (isGroup) {
       const newConversation = await db.conversation.create({
         data: {
@@ -81,7 +84,7 @@ export async function POST(req: NextRequest) {
           isGroup: true,
           users: {
             create: [
-              ...members.map((member) => ({
+              ...members.map((member: { value: string; label: string }) => ({
                 user: { connect: { id: member.value } },
                 isAdmin: false,
               })),
@@ -102,8 +105,8 @@ export async function POST(req: NextRequest) {
       });
 
       newConversation.users.forEach(({ user }) => {
-        if (user.email) {
-          pusherServer.trigger(user.email, "conversation:new", newConversation);
+        if (user.id) {
+          pusherServer.trigger(user.id, "conversation:new", newConversation);
         }
       });
 
@@ -145,8 +148,8 @@ export async function POST(req: NextRequest) {
     });
 
     newConversation.users.forEach(({ user }) => {
-      if (user.email) {
-        pusherServer.trigger(user.email, "conversation:new", newConversation);
+      if (user.id) {
+        pusherServer.trigger(user.id, "conversation:new", newConversation);
       }
     });
 

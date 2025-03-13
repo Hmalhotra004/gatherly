@@ -55,13 +55,14 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    await pusherServer.trigger(currentUser.email, "conversation:update", {
+    await pusherServer.trigger(currentUser.id, "conversation:update", {
       id: conversationId,
       messages: [updatedMessage],
     });
 
-    if (lastMessage.seenIds.indexOf(currentUser.id) !== -1)
-      return NextResponse.json(conversation);
+    //FIXME: Seen msgs wont work cuz here
+    // if (lastMessage.seenIds.indexOf(currentUser.id) !== -1)
+    //   return NextResponse.json(conversation);
 
     await pusherServer.trigger(
       conversationId,
