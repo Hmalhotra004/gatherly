@@ -34,8 +34,8 @@ export async function DELETE(req: NextRequest) {
 
     const deletedConversation = await db.conversationOnUser.deleteMany({
       where: {
-        id: conversationId,
         userId: currentUser.id,
+        conversationId: conversationId,
       },
     });
 
@@ -44,16 +44,6 @@ export async function DELETE(req: NextRequest) {
       "conversation:remove",
       existingConversation
     );
-
-    // existingConversation.users.forEach((user) => {
-    //   if (user.email) {
-    //     pusherServer.trigger(
-    //       user.email,
-    //       "conversation:remove",
-    //       existingConversation
-    //     );
-    //   }
-    // });
 
     return NextResponse.json(deletedConversation);
   } catch (err) {
@@ -125,6 +115,15 @@ export async function POST(req: NextRequest) {
     });
 
     if (existingConversation) {
+      if (!existingConversation.isGroup) {
+        await db.conversationOnUser.create({
+          data: {
+            conversationId: existingConversation.id,
+            userId: currentUser.id,
+            isAdmin: false,
+          },
+        });
+      }
       return NextResponse.json(existingConversation);
     }
 

@@ -7,6 +7,7 @@ import { FullConversationType } from "@/types";
 import Link from "next/link";
 import { useMemo } from "react";
 import { HiChevronLeft, HiEllipsisHorizontal } from "react-icons/hi2";
+import ProfileDrawer from "../modals/ProfileDrawer";
 
 interface HeaderProps {
   conversation: FullConversationType;
@@ -49,12 +50,12 @@ const Header = ({ conversation }: HeaderProps) => {
             </div>
           </div>
         </div>
-        {/* <ProfileDrawer data={conversation}> */}
-        <HiEllipsisHorizontal
-          size={32}
-          className="text-sky-500 cursor-pointer hover:text-sky-600 transition"
-        />
-        {/* </ProfileDrawer> */}
+        <ProfileDrawer data={conversation}>
+          <HiEllipsisHorizontal
+            size={32}
+            className="text-sky-500 cursor-pointer hover:text-sky-600 transition"
+          />
+        </ProfileDrawer>
       </div>
     </>
   );

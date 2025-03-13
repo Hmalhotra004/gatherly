@@ -5,7 +5,6 @@ import AvatarGroup from "@/components/avatar/AvatarGroup";
 import ConvoDeleteAlert from "@/components/modals/ConvoDeleteAlert";
 import useOtherUser from "@/hooks/useOtherUser";
 import useActiveList from "@/store/useActiveList";
-import { Conversation, User } from "@prisma/client";
 import { format } from "date-fns";
 import { Trash2 } from "lucide-react";
 import { useMemo } from "react";
@@ -17,25 +16,24 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { FullConversationType } from "@/types";
 
 interface ProfileDrawerProps {
-  data: Conversation & {
-    users: User[];
-  };
+  data: FullConversationType;
   children: React.ReactNode;
 }
 
 const ProfileDrawer = ({ data, children }: ProfileDrawerProps) => {
   const otherUser = useOtherUser(data);
   const { members } = useActiveList();
-  const isActive = members.indexOf(otherUser?.email!) !== -1;
+  const isActive = members.indexOf(otherUser?.user.email) !== -1;
 
   const joinedDate = useMemo(() => {
-    return format(new Date(otherUser.createdAt), "PP");
+    return format(new Date(otherUser.user.createdAt), "PP");
   }, [otherUser]);
 
   const title = useMemo(() => {
-    return data.name || otherUser.name;
+    return data.name || otherUser.user.name;
   }, [otherUser, data]);
 
   const statusText = useMemo(() => {
@@ -55,9 +53,9 @@ const ProfileDrawer = ({ data, children }: ProfileDrawerProps) => {
               <SheetTitle>
                 <div className="mb-2">
                   {data.isGroup ? (
-                    <AvatarGroup users={data.users} />
+                    <AvatarGroup users={data} />
                   ) : (
-                    <Avatar user={otherUser} />
+                    <Avatar user={otherUser.user} />
                   )}
                 </div>
               </SheetTitle>
@@ -88,7 +86,7 @@ const ProfileDrawer = ({ data, children }: ProfileDrawerProps) => {
                       Emails
                     </dt>
                     <dd className="mt-1 text-sm text-gray-900 sm:col-span-2">
-                      {data.users.map((user) => user.email).join(", ")}
+                      {data.users.map((user) => user.user.email).join(", ")}
                     </dd>
                   </div>
                 )}
@@ -98,7 +96,7 @@ const ProfileDrawer = ({ data, children }: ProfileDrawerProps) => {
                       Email
                     </dt>
                     <dd className="mt-1 text-sm text-gray-900 sm:col-span-2">
-                      {otherUser.email}
+                      {otherUser.user.email}
                     </dd>
                   </div>
                 )}
