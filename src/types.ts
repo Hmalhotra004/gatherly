@@ -21,6 +21,10 @@ export type UserWithFriendsAndFriendRequests = User & {
   friendRequests: Friend[];
 };
 
+export type otherUser = ConversationOnUser & {
+  user: User;
+};
+
 export type friend = {
   id: string | null;
   name: string | null;

@@ -1,3 +1,4 @@
+import Cookies from "js-cookie";
 import { signOut } from "next-auth/react";
 import { usePathname } from "next/navigation";
 import { useMemo } from "react";
@@ -26,7 +27,10 @@ const useRoutes = () => {
       {
         label: "logout",
         href: "#",
-        onClick: () => signOut(),
+        onClick: () => {
+          Cookies.remove("userId");
+          signOut();
+        },
         icon: HiArrowLeftOnRectangle,
       },
     ],
