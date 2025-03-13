@@ -96,13 +96,13 @@ const ConversationList = ({ initialItems, users }: ConversationListProps) => {
           </MakeGroupModal>
         </div>
 
-        {/* {items.map((item) => (
+        {items.map((item) => (
           <ConversationBox
             key={item.id}
             data={item}
             selected={conversationId === item.id}
           />
-        ))} */}
+        ))}
       </div>
     </aside>
   );
