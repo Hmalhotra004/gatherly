@@ -60,7 +60,7 @@ const ConversationBox = ({ data, selected }: ConversationBoxProps) => {
       onClick={handleClick}
     >
       {data.isGroup ? (
-        <AvatarGroup users={data.users} />
+        <AvatarGroup users={data} />
       ) : (
         <Avatar user={otherUser.user} />
       )}

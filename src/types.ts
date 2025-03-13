@@ -11,18 +11,18 @@ export type FullMessageType = Message & {
   seen: User[];
 };
 
+export type otherUser = ConversationOnUser & {
+  user: User;
+};
+
 export type FullConversationType = Conversation & {
-  users: ConversationOnUser[];
+  users: otherUser[];
   messages: FullMessageType[];
 };
 
 export type UserWithFriendsAndFriendRequests = User & {
   friends: friend[];
   friendRequests: Friend[];
-};
-
-export type otherUser = ConversationOnUser & {
-  user: User;
 };
 
 export type friend = {
