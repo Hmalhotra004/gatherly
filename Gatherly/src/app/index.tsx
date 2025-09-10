@@ -3,8 +3,8 @@ import { StyleSheet, Text, View } from "react-native";
 
 const Index = () => {
   return (
-    <View>
-      <Text>Index</Text>
+    <View className="p-4">
+      <Text className="text-blue-500">Index</Text>
     </View>
   );
 };
