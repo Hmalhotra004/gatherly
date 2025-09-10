@@ -7,5 +7,4 @@ config.resolver.extraNodeModules = {
   "@": __dirname + "/src",
 };
 
-
 module.exports = withNativeWind(config, { input: "./src/app/global.css" });
